@@ -22,6 +22,8 @@ namespace Actions
                 Container.BindLoggerAsSiraLogger(log);
                 Container.BindInstance(metadata).WithId(nameof(Actions)).AsSingle();
             });
+
+            zenjector.OnMenu<ActionsDashboardInstaller>();
         }
 
         [OnEnable, OnDisable]

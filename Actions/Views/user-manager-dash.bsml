@@ -1,0 +1,22 @@
+﻿<bg horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <vertical id="user-container" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="75" pref-height="75">
+    <grid horizontal-fit="Unconstrained" vertical-fit="Unconstrained" child-align="MiddleLeft" cell-size-x="14" cell-size-y="14" spacing-x="1" spacing-y="1">
+      <macro.for-each hosts="user-hosts">
+        <clickable-image id="user-image" active="~has-content" on-click="clicked" />
+      </macro.for-each>
+    </grid>
+  </vertical>
+  <clickable-image src="https://cdn.discordapp.com/avatars/396288448203587585/835e35851931cb94cb4c771fe0fca83b.png" on-click="toggle" anchor-pos-x="-45" size-delta-x="10" size-delta-y="10" />
+  <modal size-delta-x="60" size-delta-y="35" show-event="show-modal" hide-event="hide-modal" clickerino-offerino-closerino="true">
+    <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60" pref-height="35" pad="2">
+      <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60" pad="2">
+        <text id="name-text"  align="Center" />
+        <slider-setting text="Timeout" value="timeout-value" formatter="format-timeout" min="0" max="13" integer-only="true" apply-on-change="true" font-size="4.88" />
+        <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="2">
+          <button text="Cancel" event-click="hide-modal" pref-width="26" pref-height="10" />
+          <button text="Timeout" on-click="timeout" pref-width="26" pref-height="10" />
+        </horizontal>
+      </vertical>
+    </vertical>
+  </modal>
+</bg>

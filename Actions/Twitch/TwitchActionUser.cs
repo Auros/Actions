@@ -19,19 +19,20 @@ namespace Actions.Twitch
             _socialPlatform = socialPlatform;
         }
 
-        public async Task Ban(float? length)
+        public Task Ban(float? length)
         {
-            if (_socialPlatform is TwitchSocialPlatform)
+            if (_socialPlatform is TwitchSocialPlatform twitchPlatform)
             {
                 if (length.HasValue)
                 {
-                    await _socialPlatform.SendMessage($"/timeout {Name} {length}");
+                    twitchPlatform.SendCommand($"timeout {Name} {length}");
                 }
                 else
                 {
-                    await _socialPlatform.SendMessage($"/ban {Name}");
+                    twitchPlatform.SendCommand($"ban {Name}");
                 }
             }
+            return Task.CompletedTask;
         }
     }
 }

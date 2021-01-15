@@ -61,7 +61,7 @@ namespace Actions.Twitch
                 _siraLog.Debug("Success. Deserializing response.");
                 var validation = JsonConvert.DeserializeObject<ValidationResponse>(response.Content!);
 
-                await Utilities.AwaitSleep(1000);
+                await Utilities.AwaitSleep(2000);
                 Channel = _twitchService.Channels.Values.FirstOrDefault()?.Id;
                 ClientID = validation.ClientID;
 
@@ -76,7 +76,7 @@ namespace Actions.Twitch
 
         private async void MessageReceived(IChatService service, IChatMessage message)
         {
-            IActionUser? user = await GetUser(message.Sender.Id);
+            IActionUser? user = await GetUser(message.Sender.DisplayName);
             if (user is null)
                 return;
             ChannelActivity?.Invoke(user);
@@ -89,24 +89,24 @@ namespace Actions.Twitch
             _cancellationTokenSource.Cancel();
         }
 
-        public async Task<IActionUser?> GetUser(string id)
+        public async Task<IActionUser?> GetUser(string login)
         {
-            if (_userCache.TryGetValue(id, out IActionUser usr))
+            if (_userCache.TryGetValue(login, out IActionUser usr))
             {
                 return usr;
             }
             if (Initialized)
             {
-                _siraLog.Debug($"Fetching User [{id}]");
-                var response = await _http.GetAsync($"https://api.twitch.tv/helix/users?id={id}", AuthToken!, ClientID);
+                _siraLog.Debug($"Fetching User [{login}]");
+                var response = await _http.GetAsync($"https://api.twitch.tv/helix/users?login={login}", AuthToken!, ClientID);
                 if (response.Successful)
                 {
                     User user = JsonConvert.DeserializeObject<UserResponse>(response.Content!).Users[0];
                     _siraLog.Debug($"Successfully fetched user [{user.DisplayName}].");
                     usr = new TwitchActionUser(this, user);
-                    if (!_userCache.ContainsKey(id))
+                    if (!_userCache.ContainsKey(login))
                     {
-                        _userCache.Add(id, usr);
+                        _userCache.Add(login, usr);
                     }
                     return usr;
                 }
@@ -120,6 +120,12 @@ namespace Actions.Twitch
             if (Initialized)
                 _twitchService.SendTextMessage(msg, Channel!);
             return Task.CompletedTask;
+        }
+
+        public void SendCommand(string command)
+        {
+            if (Initialized)
+                _twitchService.SendCommand(command, Channel!);
         }
     }
 }

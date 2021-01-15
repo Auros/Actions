@@ -37,6 +37,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Views\user-manager-dash.bsml" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Reference Include="BeatmapCore">
           <HintPath>$(BeatSaberDir)\Beat Saber_Data\Managed\BeatmapCore.dll</HintPath>
           <Private>False</Private>
@@ -145,6 +149,7 @@
 
     <ItemGroup>
         <EmbeddedResource Include="manifest.json" />
+        <EmbeddedResource Include="Views\user-manager-dash.bsml" />
     </ItemGroup>
 
     <ItemGroup>	

@@ -76,7 +76,7 @@ namespace Actions.Components
         #endregion
 
         [Inject]
-        protected void Construct(PhysicsRaycasterWithCache physicsRaycasterWithCache)
+        protected virtual void Construct(PhysicsRaycasterWithCache physicsRaycasterWithCache)
         {
             _floatingScreen = FloatingScreen.CreateFloatingScreen(Size, false, Position, Rotation, CurveRadius);
             _curvedCanvasSettings = GetComponentInChildren<CurvedCanvasSettings>(true);
