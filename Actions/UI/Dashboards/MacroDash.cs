@@ -4,16 +4,20 @@ using Tweening;
 using UnityEngine;
 using Actions.Dashboard;
 using Actions.Components;
+using System.ComponentModel;
 using System.Collections.Generic;
 using BeatSaberMarkupLanguage.Attributes;
-using System.ComponentModel;
+using BeatSaberMarkupLanguage.FloatingScreen;
 
 namespace Actions.UI.Dashboards
 {
     [ViewDefinition("Actions.Views.macro-dash.bsml")]
     [HotReload(RelativePathToLayout = @"..\..\Views\macro-dash.bsml")]
-    internal class MacroDash : FloatingViewController<MacroDash>, IInitializable
+    internal class MacroDash : FloatingViewController<MacroDash>, IInitializable, IDisposable
     {
+        [Inject]
+        private readonly Config _config = null!;
+
         [Inject]
         private readonly TweeningManager _tweeningManager = null!;
 
@@ -31,6 +35,22 @@ namespace Actions.UI.Dashboards
         public void Initialize()
         {
             gameObject.SetActive(true);
+
+            _floatingScreen!.HandleReleased += HandleReleased;
+            _floatingScreen!.HandleSide = FloatingScreen.Side.Right;
+            _floatingScreen!.ScreenPosition = _config.MacroDashboardPosition;
+            _floatingScreen!.ScreenRotation = Quaternion.Euler(_config.MacroDashboardRotation);
+        }
+
+        private void HandleReleased(object _, FloatingScreenHandleEventArgs e)
+        {
+            _config.MacroDashboardPosition = e.Position;
+            _config.MacroDashboardRotation = e.Rotation.eulerAngles;
+        }
+
+        public void Dispose()
+        {
+            _floatingScreen!.HandleReleased -= HandleReleased;
         }
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)

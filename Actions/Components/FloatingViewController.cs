@@ -12,7 +12,7 @@ namespace Actions.Components
     {
         private static readonly FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.Accessor PhysicsRaycaster = FieldAccessor<VRGraphicRaycaster, PhysicsRaycasterWithCache>.GetAccessor("_physicsRaycaster");
 
-        private FloatingScreen? _floatingScreen;
+        protected FloatingScreen? _floatingScreen;
         private CurvedCanvasSettings? _curvedCanvasSettings;
 
         #region Properties
@@ -69,6 +69,18 @@ namespace Actions.Components
                 if (_curvedCanvasSettings != null)
                 {
                     _curvedCanvasSettings.SetRadius(_curveRadius);
+                }
+            }
+        }
+
+        public bool Moveable
+        {
+            get => _floatingScreen?.ShowHandle ?? false;
+            set
+            {
+                if (_floatingScreen != null)
+                {
+                    _floatingScreen.ShowHandle = value;
                 }
             }
         }

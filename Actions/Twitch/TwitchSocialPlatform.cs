@@ -1,6 +1,7 @@
 ﻿using System;
 using Zenject;
 using ChatCore;
+using SiraUtil;
 using System.Linq;
 using IPA.Utilities;
 using SiraUtil.Tools;
@@ -11,29 +12,30 @@ using ChatCore.Interfaces;
 using System.Threading.Tasks;
 using ChatCore.Services.Twitch;
 using System.Collections.Generic;
-using SiraUtil;
 
 namespace Actions.Twitch
 {
     internal class TwitchSocialPlatform : ISocialPlatform, IInitializable, IDisposable
     {
         private readonly Http _http;
+        private readonly Config _config;
         private readonly SiraLog _siraLog;
         private readonly CancellationTokenSource _cancellationTokenSource;
 
-        private string? Channel { get; set; }
         private string? ClientID { get; set; }
         private string? AuthToken { get; set; }
-        public bool Initialized => !(ClientID is null || AuthToken is null || Channel is null);
+        public bool Initialized => !(ClientID is null || AuthToken is null || _config.Channel is null);
 
         private TwitchService _twitchService = null!;
-        private ChatCoreInstance _chatCoreInstance = null!;
         public event Action<IActionUser>? ChannelActivity;
+        private ChatCoreInstance _chatCoreInstance = null!;
+        public IReadOnlyList<string> Channels = new List<string>();
         private readonly Dictionary<string, IActionUser> _userCache = new Dictionary<string, IActionUser>();
 
-        public TwitchSocialPlatform(SiraLog siraLog, Http http)
+        public TwitchSocialPlatform(Http http, Config config, SiraLog siraLog)
         {
             _http = http;
+            _config = config;
             _siraLog = siraLog;
             _cancellationTokenSource = new CancellationTokenSource();
         }
@@ -63,10 +65,16 @@ namespace Actions.Twitch
 
                 await Utilities.AwaitSleep(2000);
 
-                Channel = _twitchService.Channels.Values.FirstOrDefault()?.Id;
+                var list = new List<string>();
+
+                foreach (var channel in _twitchService.Channels.Values)
+                    list.Add(channel.Id);
+                Channels = list;
+
+                _config.Channel = (string.IsNullOrWhiteSpace(_config.Channel) ? _twitchService.Channels.Values.FirstOrDefault()?.Id : _config.Channel) ?? "None";
                 ClientID = validation.ClientID;
 
-                _siraLog.Debug($"Channel: {Channel}");
+                _siraLog.Debug($"Channel: {_config.Channel}");
                 _siraLog.Debug($"ClientID: {ClientID}");
             }
             else
@@ -118,15 +126,15 @@ namespace Actions.Twitch
 
         public Task SendMessage(string msg)
         {
-            if (Initialized)
-                _twitchService.SendTextMessage(msg, Channel!);
+            if (Initialized && _config.Channel != "None")
+                _twitchService.SendTextMessage(msg, _config.Channel!);
             return Task.CompletedTask;
         }
 
         public Task SendCommand(string command)
         {
-            if (Initialized)
-                _twitchService.SendCommand(command, Channel!);
+            if (Initialized && _config.Channel != "None")
+                _twitchService.SendCommand(command, _config.Channel!);
             return Task.CompletedTask;
         }
     }

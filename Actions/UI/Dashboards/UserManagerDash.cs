@@ -12,6 +12,7 @@ using BeatSaberMarkupLanguage;
 using System.Collections.Generic;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.FloatingScreen;
 
 namespace Actions.UI.Dashboards
 {
@@ -19,6 +20,9 @@ namespace Actions.UI.Dashboards
     [HotReload(RelativePathToLayout = @"..\..\Views\user-manager-dash.bsml")]
     internal class UserManagerDash : FloatingViewController<UserManagerDash>, IInitializable, IDisposable
     {
+        [Inject]
+        private readonly Config _config = null!;
+
         [Inject]
         private readonly TweeningManager _tweeningManager = null!;
 
@@ -48,6 +52,16 @@ namespace Actions.UI.Dashboards
         {
             gameObject.SetActive(true);
             _platformManager.ChannelActivity += ActivityReceived;
+
+            _floatingScreen!.HandleReleased += HandleReleased;
+            _floatingScreen!.ScreenPosition = _config.UserManagerDashboardPosition;
+            _floatingScreen!.ScreenRotation = Quaternion.Euler(_config.UserManagerDashboardRotation);
+        }
+
+        private void HandleReleased(object _, FloatingScreenHandleEventArgs e)
+        {
+            _config.UserManagerDashboardPosition = e.Position;
+            _config.UserManagerDashboardRotation = e.Rotation.eulerAngles;
         }
 
         private void ActivityReceived(IActionUser user)
@@ -87,16 +101,8 @@ namespace Actions.UI.Dashboards
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
-            userHosts.Add(new UserHost(UserClicked));
+            for (int i = 0; i < 10; i++)
+                userHosts.Add(new UserHost(UserClicked));
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
 
             nameText.fontSizeMin = 4.5f;

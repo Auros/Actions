@@ -1,3 +1,17 @@
-﻿<bg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
-  <text text="I love Denyah ♥" align="Center" font-size="10" />
+﻿<bg horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+    <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="85">
+      <text text="~version" align="Left" font-size="5" face-color="grey" />
+      <clickable-text text="by Auros" align="Right" face-color="grey" hover-hint="Want to support me? Click this to open up my donation page in your browser." on-click="clicked-auros" />
+    </horizontal>
+    <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="90">
+      <image src="Actions.Resources.logo.png" pref-height="20" preserve-aspect="true" />
+    </vertical>
+    <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="85">
+      <bool-setting text="Show In Game" italics="false" hover-hint="Show the dashboards in game?" value="show-in-game" apply-on-change="true" />
+      <bool-setting text="Do TTS Prefix" italics="false" hover-hint="Adds the ! in front of any macros that post to the chat." value="tts-prefix" apply-on-change="true" />
+      <bool-setting text="Edit Mode" italics="false" face-color="#f5d142" hover-hint="Allows you to move around the dashboards." value="edit-mode" on-change="edit-mode-toggled" apply-on-change="true" get-event="update-edit" />
+      <dropdown-list-setting text="Channel" italics="false" hover-hint="The channel to send messages to." value="channel" apply-on-change="true" options="channels" />
+    </vertical>
+  </vertical>
 </bg>
