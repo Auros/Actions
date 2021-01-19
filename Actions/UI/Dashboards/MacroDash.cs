@@ -56,23 +56,25 @@ namespace Actions.UI.Dashboards
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            var macros = _config.Macros.Take(21);
-            for (int i = 0; i < 21; i++)
+            if (firstActivation)
             {
-                var macro = macros.ElementAtOrDefault(i);
-                var host = new MacroHost(MacroClicked);
-                macroHosts.Add(host);
-                if (macro is null)
-                    continue;
-
-                host.Macro = macro;
+                var macros = _config.Macros.Take(21);
+                for (int i = 0; i < 21; i++)
+                {
+                    var macro = macros.ElementAtOrDefault(i);
+                    var host = new MacroHost(MacroClicked);
+                    macroHosts.Add(host);
+                    if (macro is null)
+                        continue;
+                    host.Macro = macro;
+                }
             }
-
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
-            macroContainerCanvas = macroContainer.gameObject.AddComponent<CanvasGroup>();
-            macroContainerCanvas.alpha = 0f;
-
-            Position = new Vector3(0f, 2.5f, 3f);
+            if (firstActivation)
+            {
+                macroContainerCanvas = macroContainer.gameObject.AddComponent<CanvasGroup>();
+                macroContainerCanvas.alpha = 0f;
+            }
         }
 
         public void MacroCreated(Macro macro)
@@ -160,7 +162,6 @@ namespace Actions.UI.Dashboards
             {
                 if (Macro is null)
                     return;
-
                 _macro?.Invoke(Macro);
             }
         }

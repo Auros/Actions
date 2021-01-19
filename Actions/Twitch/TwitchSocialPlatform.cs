@@ -62,11 +62,9 @@ namespace Actions.Twitch
             {
                 _siraLog.Debug("Success. Deserializing response.");
                 var validation = JsonConvert.DeserializeObject<ValidationResponse>(response.Content!);
-
                 await Utilities.AwaitSleep(2000);
 
                 var list = new List<string>();
-
                 foreach (var channel in _twitchService.Channels.Values)
                     list.Add(channel.Id);
                 Channels = list;
@@ -106,6 +104,7 @@ namespace Actions.Twitch
             }
             if (Initialized)
             {
+                if (login == "[tmi.twitch.tv]") return null;
                 _siraLog.Debug($"Fetching User [{login}]");
                 var response = await _http.GetAsync($"https://api.twitch.tv/helix/users?login={login}", AuthToken!, ClientID);
                 if (response.Successful)

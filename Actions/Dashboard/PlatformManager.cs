@@ -8,8 +8,8 @@ namespace Actions.Dashboard
     internal class PlatformManager : IInitializable, IDisposable
     {
         private readonly Config _config;
-        public event Action<IActionUser>? ChannelActivity;
         private readonly List<ISocialPlatform> _platforms;
+        public event Action<IActionUser>? ChannelActivity;
 
         /*public PlatformManager([InjectOptional] List<ISocialPlatform> platforms)
         {

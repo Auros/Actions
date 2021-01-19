@@ -1,8 +1,8 @@
 ﻿using System;
 using Zenject;
+using Actions.Dashboard;
 using BeatSaberMarkupLanguage;
 using BeatSaberMarkupLanguage.MenuButtons;
-using Actions.Dashboard;
 
 namespace Actions.UI
 {
@@ -25,9 +25,7 @@ namespace Actions.UI
         public void Dispose()
         {
             if (MenuButtons.IsSingletonAvailable && BSMLParser.IsSingletonAvailable)
-            {
                 MenuButtons.instance.UnregisterButton(_menuButton);
-            }
         }
 
         private void ShowFlow()

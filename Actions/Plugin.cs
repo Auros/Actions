@@ -31,6 +31,7 @@ namespace Actions
 
             zenjector.OnMenu<ActionsMenuInstaller>();
             zenjector.OnMenu<ActionsDashboardInstaller>();
+            zenjector.OnGame<ActionsDashboardInstaller>().When(() => config.ShowInGame);
         }
 
         [OnEnable, OnDisable]

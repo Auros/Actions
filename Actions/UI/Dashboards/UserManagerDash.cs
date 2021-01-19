@@ -77,7 +77,6 @@ namespace Actions.UI.Dashboards
             }
 
             var hosts = userHosts.Cast<UserHost>().ToArray();
-
             var existingHost = hosts.FirstOrDefault(uh => uh.User == user);
             int indexOrLast = existingHost is null ? hosts.Count() - 1 : hosts.IndexOf(existingHost);
             for (int i = indexOrLast; i > 0; i--)
@@ -101,16 +100,21 @@ namespace Actions.UI.Dashboards
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
-            for (int i = 0; i < 10; i++)
-                userHosts.Add(new UserHost(UserClicked));
+            if (firstActivation)
+            {
+                for (int i = 0; i < 10; i++)
+                    userHosts.Add(new UserHost(UserClicked));
+            }
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
+            if (firstActivation)
+            {
+                nameText.fontSizeMin = 4.5f;
+                nameText.fontSizeMax = 7.5f;
+                nameText.enableAutoSizing = true;
 
-            nameText.fontSizeMin = 4.5f;
-            nameText.fontSizeMax = 7.5f;
-            nameText.enableAutoSizing = true;
-
-            userContainerCanvas = userContainer.gameObject.AddComponent<CanvasGroup>();
-            userContainerCanvas.alpha = 0f;
+                userContainerCanvas = userContainer.gameObject.AddComponent<CanvasGroup>();
+                userContainerCanvas.alpha = 0f;
+            }
         }
 
         [UIAction("toggle")]
@@ -126,7 +130,6 @@ namespace Actions.UI.Dashboards
             {
                 foreach (UserHost user in userHosts)
                     user.Update();
-
                 _tweeningManager.AddTween(new FloatTween(currentAlpha, 1f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
             }
             opened = !opened;
@@ -197,7 +200,6 @@ namespace Actions.UI.Dashboards
             _lastClickedUser.Ban(timeoutDuration);
         }
 
-        // TODO: Only update image if the menu is active/just turned on
         public class UserHost : INotifyPropertyChanged
         {
             [UIValue("username")] protected string Username => User?.Name ?? "";
