@@ -20,7 +20,7 @@ namespace Actions
             .Pseudo(Container =>
             {
                 Container.BindLoggerAsSiraLogger(log);
-                Container.BindInstance(metadata).WithId(nameof(Actions)).AsSingle();
+                Container.BindInstance(metadata).WithId(nameof(Actions)).AsCached();
             });
 
             zenjector.OnMenu<ActionsDashboardInstaller>();
