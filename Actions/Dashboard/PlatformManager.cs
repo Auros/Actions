@@ -7,7 +7,7 @@ namespace Actions.Dashboard
 {
     internal class PlatformManager : IInitializable, IDisposable
     {
-        private readonly SiraLog _siraLog;
+        private readonly Config _config;
         public event Action<IActionUser>? ChannelActivity;
         private readonly List<ISocialPlatform> _platforms;
 
@@ -17,9 +17,9 @@ namespace Actions.Dashboard
             else _platforms = platforms;
         }*/
 
-        public PlatformManager(SiraLog siraLog, ISocialPlatform platform)
+        public PlatformManager(Config config, SiraLog siraLog, ISocialPlatform platform)
         {
-            _siraLog = siraLog;
+            _config = config;
             _platforms = new List<ISocialPlatform> { platform };
         }
 
@@ -41,13 +41,13 @@ namespace Actions.Dashboard
         public void SendMessage(string msg)
         {
             foreach (var platform in _platforms)
-                platform.SendMessage(msg);
+                platform.SendMessage((_config.PrefixForTTS ? "! " : "") + msg);
         }
 
         public void SendCommand(string cmd)
         {
             foreach (var platform in _platforms)
-                platform.SendCommand(cmd);
+                platform.SendCommand(cmd.TrimStart('/'));
         }
 
         public void Dispose()

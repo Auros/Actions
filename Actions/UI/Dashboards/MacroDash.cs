@@ -1,6 +1,7 @@
 ﻿using System;
 using Zenject;
 using Tweening;
+using System.Linq;
 using UnityEngine;
 using Actions.Dashboard;
 using Actions.Components;
@@ -55,19 +56,47 @@ namespace Actions.UI.Dashboards
 
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
+            var macros = _config.Macros.Take(21);
             for (int i = 0; i < 21; i++)
-                macroHosts.Add(new MacroHost(MacroClicked));
+            {
+                var macro = macros.ElementAtOrDefault(i);
+                var host = new MacroHost(MacroClicked);
+                macroHosts.Add(host);
+                if (macro is null)
+                    continue;
+
+                host.Macro = macro;
+            }
 
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             macroContainerCanvas = macroContainer.gameObject.AddComponent<CanvasGroup>();
             macroContainerCanvas.alpha = 0f;
 
             Position = new Vector3(0f, 2.5f, 3f);
+        }
 
-            var h = (macroHosts[0] as MacroHost)!;
+        public void MacroCreated(Macro macro)
+        {
+            var host = macroHosts.Cast<MacroHost>().FirstOrDefault(mh => mh.Macro == null);
+            if (host is null)
+                return;
+            host.Macro = macro;
+        }
 
-            h.Name = "hello";
-            h.Macro = "hello";
+        public void MacroEdited(Macro macro)
+        {
+            var host = macroHosts.Cast<MacroHost>().FirstOrDefault(mh => mh.Macro != null && mh.Macro == macro);
+            if (host is null)
+                return;
+            host.Macro = macro;
+        }
+
+        public void MacroDeleted(Macro macro)
+        {
+            var host = macroHosts.Cast<MacroHost>().FirstOrDefault(mh => mh.Macro != null && mh.Macro == macro);
+            if (host is null)
+                return;
+            host.Macro = null;
         }
 
         [UIAction("toggle")]
@@ -91,32 +120,37 @@ namespace Actions.UI.Dashboards
             macroContainerCanvas.alpha = val;
         }
 
-        private void MacroClicked(string macro)
+        private void MacroClicked(Macro macro)
         {
-            _platformManager.SendMessage(macro);
+            if (!macro.IsCommand)
+            {
+                _platformManager.SendMessage(macro.Content);
+                return;
+            }
+            _platformManager.SendCommand(macro.Content);
         }
 
         public class MacroHost : INotifyPropertyChanged
         {
-            [UIValue("name")] public string Name { get; set; } = "[MACRO]";
+            [UIValue("name")] public string Name => _macroValue?.Name ?? "[MACRO]";
             [UIValue("has-content")] protected bool HasContent => !(Macro is null);
 
-            private string? _macroText;
-            public string? Macro
+            private Macro? _macroValue;
+            public Macro? Macro
             {
-                get => _macroText;
+                get => _macroValue;
                 set
                 {
-                    _macroText = value;
+                    _macroValue = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasContent)));
                 }
             }
 
-            private readonly Action<string>? _macro;
+            private readonly Action<Macro>? _macro;
             public event PropertyChangedEventHandler? PropertyChanged;
 
-            public MacroHost(Action<string>? macro = null)
+            public MacroHost(Action<Macro>? macro = null)
             {
                 _macro = macro;
             }

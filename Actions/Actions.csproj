@@ -39,6 +39,7 @@
     <ItemGroup>
       <None Remove="Resources\logo.png" />
       <None Remove="Views\macro-dash.bsml" />
+      <None Remove="Views\macro-view.bsml" />
       <None Remove="Views\main-view.bsml" />
       <None Remove="Views\user-manager-dash.bsml" />
     </ItemGroup>
@@ -154,6 +155,7 @@
         <EmbeddedResource Include="manifest.json" />
         <EmbeddedResource Include="Resources\logo.png" />
         <EmbeddedResource Include="Views\macro-dash.bsml" />
+        <EmbeddedResource Include="Views\macro-view.bsml" />
         <EmbeddedResource Include="Views\main-view.bsml" />
         <EmbeddedResource Include="Views\user-manager-dash.bsml" />
     </ItemGroup>

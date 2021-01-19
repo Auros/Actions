@@ -2,9 +2,9 @@
 {
     internal class Macro
     {
-        public string Name { get; set; } = null!;
-        public string Content { get; set; } = null!;
-        public bool IsCommand { get; set; }
+        public virtual string Name { get; set; } = null!;
+        public virtual string Content { get; set; } = null!;
+        public virtual bool IsCommand { get; set; }
 
         public Macro() { }
 

@@ -1,0 +1,49 @@
+﻿<bg horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+    <vertical bg="round-rect-panel" bg-color="purple" pref-width="92">
+      <text text="Macro Manager" align="Center" font-size="7" />
+    </vertical>
+    <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-height="63">
+      <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="80">
+        <custom-list id="macro-list" pref-width="80" cell-size="11" pref-height="63" list-width="80">
+          <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+            <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60" pref-height="11" spacing="-4">
+              <text text="~name" align="Left" font-size="4" />
+              <text text="~rich-content" align="Left" font-size="3" rich-text="true" overflow-mode="Ellipsis" />
+            </vertical>
+            <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="20" pref-height="11">
+              <button text="💬" on-click="edit" />
+              <button text="❌" face-color="red" on-click="delete" />
+            </horizontal>
+          </horizontal>
+        </custom-list>
+      </vertical>
+      <vertical horizontal-fit="PreferredSize" vertical-fit="Unconstrained" pref-width="12" pref-height="63">
+        <page-button dir="Up" event-click="macro-list#PageUp" pref-width="10" />
+        <page-button dir="Down" event-click="macro-list#PageDown" pref-width="10" />
+      </vertical>
+    </horizontal>
+    <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
+      <button text="New" pref-width="90" on-click="new-macro" interactable="~within-limit" />
+    </horizontal>
+  </vertical>
+  <modal-keyboard show-event="show-keyboard" hide-event="hide" clickerino-offerino-closerino="false" on-enter="keyboard-entered" clear-on-open="true" />
+  <modal id="editor-modal" size-delta-x="65" size-delta-y="35" show-event="show-editor" hide-event="hide" clickerino-offerino-closerino="true">
+    <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60">
+      <text text="~editor-title" align="Center" font-size="7" word-wrapping="true" />
+      <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60">
+        <vertical pref-width="30">
+          <text text="Name" align="Left" />
+        </vertical>
+        <button text="~name-text" pref-width="30" on-click="clicked-name" />
+      </horizontal>
+      <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60">
+        <vertical pref-width="30">
+          <text text="Content" align="Left" />
+        </vertical>
+        <button text="~content-text" pref-width="30" on-click="clicked-content" />
+      </horizontal>
+      <bool-setting text="Is Command" italics="false" value="is-command-value" bind-value="true" get-event="cmd" on-change="command-value-changed" apply-on-change="true" hover-hint="Turn this ON if this macro is a built-in twitch SLASH command (/slow, /clear). Keep this off if it's for a custom bot or just normal text." />
+    </vertical>
+  </modal>
+</bg>

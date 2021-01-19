@@ -9,14 +9,16 @@ namespace Actions.UI
     {
         private MacroDash _macroDash = null!;
         private ActionMainView _mainView = null!;
+        private ActionMacroView _macroView = null!;
         private UserManagerDash _userManagerDash = null!;
         private MainFlowCoordinator _mainFlowCoordinator = null!;
 
 
         [Inject]
-        public void Construct(MacroDash macroDash, ActionMainView mainView, UserManagerDash userManagerDash, MainFlowCoordinator mainFlowCoordinator)
+        public void Construct(MacroDash macroDash, ActionMainView mainView, ActionMacroView macroView, UserManagerDash userManagerDash, MainFlowCoordinator mainFlowCoordinator)
         {
             _mainView = mainView;
+            _macroView = macroView;
             _macroDash = macroDash;
             _userManagerDash = userManagerDash;
             _mainFlowCoordinator = mainFlowCoordinator;
@@ -30,7 +32,7 @@ namespace Actions.UI
                 SetTitle(nameof(Actions));
             }
 
-            if (addedToHierarchy) ProvideInitialViewControllers(_mainView);
+            if (addedToHierarchy) ProvideInitialViewControllers(_mainView, null, _macroView);
             _mainView.EditModeToggled += MainView_EditModeToggled;
         }
 

@@ -10,8 +10,9 @@ namespace Actions.Installers
         {
             Container.BindInterfacesAndSelfTo<MenuButtonManager>().AsSingle();
             Container.Bind<ActionMainView>().FromNewComponentAsViewController().AsSingle();
+            Container.Bind<ActionMacroView>().FromNewComponentAsViewController().AsSingle();
 
-            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject(nameof(ActionFlowCoordinator)).AsSingle();
         }
     }
 }

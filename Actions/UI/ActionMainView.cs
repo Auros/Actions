@@ -1,12 +1,12 @@
 ﻿using System;
 using Zenject;
+using System.Linq;
 using UnityEngine;
 using Actions.Dashboard;
 using System.Collections.Generic;
+using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.ViewControllers;
-using System.Linq;
-using BeatSaberMarkupLanguage.Parser;
 
 namespace Actions.UI
 {
