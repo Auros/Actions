@@ -1,7 +1,7 @@
 ﻿using System;
 using Zenject;
-using System.Collections.Generic;
 using SiraUtil.Tools;
+using System.Collections.Generic;
 
 namespace Actions.Dashboard
 {
@@ -26,9 +26,7 @@ namespace Actions.Dashboard
         public void Initialize()
         {
             foreach (var platform in _platforms)
-            {
                 platform.ChannelActivity += Platform_ChannelActivity;
-            }
         }
 
         private void Platform_ChannelActivity(IActionUser user)
@@ -40,12 +38,22 @@ namespace Actions.Dashboard
             });
         }
 
+        public void SendMessage(string msg)
+        {
+            foreach (var platform in _platforms)
+                platform.SendMessage(msg);
+        }
+
+        public void SendCommand(string cmd)
+        {
+            foreach (var platform in _platforms)
+                platform.SendCommand(cmd);
+        }
+
         public void Dispose()
         {
             foreach (var platform in _platforms)
-            {
                 platform.ChannelActivity -= Platform_ChannelActivity;
-            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using System;
+using Zenject;
 using SiraUtil;
 using Actions.UI.Dashboards;
 
@@ -8,7 +9,8 @@ namespace Actions.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind(typeof(IInitializable), typeof(UserManagerDash)).To<UserManagerDash>().FromNewComponentAsViewController().AsSingle();
+            Container.Bind(typeof(IInitializable), typeof(MacroDash)).To<MacroDash>().FromNewComponentAsViewController().AsSingle();
+            Container.Bind(typeof(IInitializable), typeof(IDisposable), typeof(UserManagerDash)).To<UserManagerDash>().FromNewComponentAsViewController().AsSingle();
         }
     }
 }

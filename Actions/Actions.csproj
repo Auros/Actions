@@ -37,6 +37,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Views\macro-dash.bsml" />
       <None Remove="Views\user-manager-dash.bsml" />
     </ItemGroup>
 
@@ -149,6 +150,7 @@
 
     <ItemGroup>
         <EmbeddedResource Include="manifest.json" />
+        <EmbeddedResource Include="Views\macro-dash.bsml" />
         <EmbeddedResource Include="Views\user-manager-dash.bsml" />
     </ItemGroup>
 

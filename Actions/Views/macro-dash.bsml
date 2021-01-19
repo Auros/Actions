@@ -1,0 +1,10 @@
+﻿<bg xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+  <vertical id="macro-container" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="75" pref-height="75">
+    <grid horizontal-fit="Unconstrained" vertical-fit="Unconstrained" child-align="MiddleRight" cell-size-x="24" cell-size-y="14" spacing-x="1" spacing-y="0.6">
+      <macro.for-each hosts="macro-hosts">
+        <button active="~has-content" text="~name" pref-width="24" pref-height="14" align="Center" on-click="clicked" />
+      </macro.for-each>
+    </grid>
+  </vertical>
+  <clickable-image src="https://cdn.discordapp.com/avatars/396288448203587585/d89424a8aa0ffc335dca1ad4839492bf.png" on-click="toggle" anchor-pos-x="45" size-delta-x="10" size-delta-y="10" />
+</bg>

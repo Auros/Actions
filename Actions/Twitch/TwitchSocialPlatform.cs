@@ -62,6 +62,7 @@ namespace Actions.Twitch
                 var validation = JsonConvert.DeserializeObject<ValidationResponse>(response.Content!);
 
                 await Utilities.AwaitSleep(2000);
+
                 Channel = _twitchService.Channels.Values.FirstOrDefault()?.Id;
                 ClientID = validation.ClientID;
 
@@ -122,10 +123,11 @@ namespace Actions.Twitch
             return Task.CompletedTask;
         }
 
-        public void SendCommand(string command)
+        public Task SendCommand(string command)
         {
             if (Initialized)
                 _twitchService.SendCommand(command, Channel!);
+            return Task.CompletedTask;
         }
     }
 }
