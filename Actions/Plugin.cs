@@ -29,6 +29,7 @@ namespace Actions
                     Container.BindInstance(metadata).WithId(nameof(Actions)).AsCached();
                 });
 
+            zenjector.OnMenu<ActionsMenuInstaller>();
             zenjector.OnMenu<ActionsDashboardInstaller>();
         }
 
