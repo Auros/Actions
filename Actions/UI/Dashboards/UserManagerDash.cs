@@ -56,7 +56,11 @@ namespace Actions.UI.Dashboards
             var firstHost = (userHosts[0] as UserHost)!;
 
             // wont change anything
-            if (firstHost.User == user) return;
+            if (firstHost.User != null)
+            {
+                if (firstHost.User.ID == user.ID)
+                    return;
+            }
 
             var hosts = userHosts.Cast<UserHost>().ToArray();
 
@@ -69,6 +73,11 @@ namespace Actions.UI.Dashboards
                 current.User = newer.User;
             }
             firstHost.User = user;
+            if (opened)
+            {
+                foreach (UserHost host in userHosts)
+                    host.Update();
+            }
         }
 
         public void Dispose()
@@ -109,6 +118,9 @@ namespace Actions.UI.Dashboards
             }
             else
             {
+                foreach (UserHost user in userHosts)
+                    user.Update();
+
                 _tweeningManager.AddTween(new FloatTween(currentAlpha, 1f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
             }
             opened = !opened;
@@ -176,50 +188,29 @@ namespace Actions.UI.Dashboards
                 _ => throw new NotImplementedException()
             };
 
-
             _lastClickedUser.Ban(timeoutDuration);
         }
 
         // TODO: Only update image if the menu is active/just turned on
         public class UserHost : INotifyPropertyChanged
         {
-            [UIComponent("user-image")]
-            protected readonly ImageView _userImage = null!;
+            [UIValue("username")] protected string Username => User?.Name ?? "";
+            [UIValue("has-content")] protected bool HasContent => !(User is null);
+            [UIAction("clicked")] protected void Clicked() => _clickedCallback?.Invoke(User!);
 
-            [UIValue("has-content")]
-            protected bool HasContent => !(User is null);
-
-            [UIValue("username")]
-            protected string Username => User?.Name ?? "";
-
+            public IActionUser? User { get; set; }
+            private readonly Action<IActionUser>? _clickedCallback;
             public event PropertyChangedEventHandler? PropertyChanged;
+            [UIComponent("user-image")] protected readonly ImageView _userImage = null!;
 
-            private Action<IActionUser>? _clickedCallback;
-            private IActionUser? _user;
-            public IActionUser? User
-            {
-                get => _user;
-                set
-                {
-                    _user = value;
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Username)));
-                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasContent)));
-                    if (_user != null && _user.ProfilePictureURL != null)
-                    {
-                        _userImage.SetImage(_user.ProfilePictureURL);
-                    }
-                }
-            }
+            public UserHost(Action<IActionUser>? clickedCallback = null) => _clickedCallback = clickedCallback;
 
-            public UserHost(Action<IActionUser>? clickedCallback = null)
+            public void Update()
             {
-                _clickedCallback = clickedCallback;
-            }
-
-            [UIAction("clicked")]
-            protected void Clicked()
-            {
-                _clickedCallback?.Invoke(_user!);
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Username)));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasContent)));
+                if (User != null)
+                    _userImage.SetImage(User.ProfilePictureURL);
             }
         }
     }
