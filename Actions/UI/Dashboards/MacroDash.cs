@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HMUI;
+using System;
 using Zenject;
 using Tweening;
 using System.Linq;
@@ -27,6 +28,9 @@ namespace Actions.UI.Dashboards
 
         [UIValue("macro-hosts")]
         protected readonly List<object> macroHosts = new List<object>();
+
+        [UIComponent("nothing-text")]
+        protected CurvedTextMeshPro nothingText = null!;
 
         [UIComponent("macro-container")]
         protected readonly RectTransform macroContainer = null!;
@@ -72,6 +76,7 @@ namespace Actions.UI.Dashboards
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             if (firstActivation)
             {
+                nothingText.gameObject.SetActive(_config.Macros.Count == 0);
                 macroContainerCanvas = macroContainer.gameObject.AddComponent<CanvasGroup>();
                 macroContainerCanvas.alpha = 0f;
             }
@@ -83,6 +88,7 @@ namespace Actions.UI.Dashboards
             if (host is null)
                 return;
             host.Macro = macro;
+            nothingText.gameObject.SetActive(false);
         }
 
         public void MacroEdited(Macro macro)
@@ -99,6 +105,7 @@ namespace Actions.UI.Dashboards
             if (host is null)
                 return;
             host.Macro = null;
+            nothingText.gameObject.SetActive(_config.Macros.Count == 0);
         }
 
         [UIAction("toggle")]
@@ -106,14 +113,7 @@ namespace Actions.UI.Dashboards
         {
             _tweeningManager.KillAllTweens(this);
             var currentAlpha = macroContainerCanvas.alpha;
-            if (opened)
-            {
-                _tweeningManager.AddTween(new FloatTween(currentAlpha, 0f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
-            }
-            else
-            {
-                _tweeningManager.AddTween(new FloatTween(currentAlpha, 1f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
-            }
+            _tweeningManager.AddTween(new FloatTween(currentAlpha, opened ? 0f : 1f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
             opened = !opened;
         }
 

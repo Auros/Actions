@@ -5,6 +5,9 @@
         <button active="~has-content" text="~name" pref-width="24" pref-height="14" align="Center" on-click="clicked" />
       </macro.for-each>
     </grid>
+    <vertical ignore-layout="true">
+      <text id="nothing-text" text="It's rather empty here. Try creating a macro!" align="Center" />
+    </vertical>
   </vertical>
-  <clickable-image src="https://cdn.discordapp.com/avatars/396288448203587585/d89424a8aa0ffc335dca1ad4839492bf.png" on-click="toggle" anchor-pos-x="45" size-delta-x="10" size-delta-y="10" />
+  <clickable-image src="Actions.Resources.purple-square.png" on-click="toggle" anchor-pos-x="45" size-delta-x="10" size-delta-y="10" />
 </bg>

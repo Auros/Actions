@@ -38,6 +38,8 @@
 
     <ItemGroup>
       <None Remove="Resources\logo.png" />
+      <None Remove="Resources\purple-square.png" />
+      <None Remove="Resources\red-square.png" />
       <None Remove="Views\macro-dash.bsml" />
       <None Remove="Views\macro-view.bsml" />
       <None Remove="Views\main-view.bsml" />
@@ -154,6 +156,8 @@
     <ItemGroup>
         <EmbeddedResource Include="manifest.json" />
         <EmbeddedResource Include="Resources\logo.png" />
+        <EmbeddedResource Include="Resources\purple-square.png" />
+        <EmbeddedResource Include="Resources\red-square.png" />
         <EmbeddedResource Include="Views\macro-dash.bsml" />
         <EmbeddedResource Include="Views\macro-view.bsml" />
         <EmbeddedResource Include="Views\main-view.bsml" />

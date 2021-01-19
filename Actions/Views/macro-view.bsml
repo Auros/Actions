@@ -12,8 +12,8 @@
               <text text="~rich-content" align="Left" font-size="3" rich-text="true" overflow-mode="Ellipsis" />
             </vertical>
             <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="20" pref-height="11">
-              <button text="💬" on-click="edit" />
-              <button text="❌" face-color="red" on-click="delete" />
+              <button text="💬" on-click="edit" hover-hint="Edit" />
+              <button text="❌" face-color="red" on-click="delete" hover-hint="Delete" />
             </horizontal>
           </horizontal>
         </custom-list>
@@ -35,13 +35,13 @@
         <vertical pref-width="30">
           <text text="Name" align="Left" />
         </vertical>
-        <button text="~name-text" pref-width="30" on-click="clicked-name" />
+        <button text="~name-text" pref-width="30" on-click="clicked-name" hover-hint="Click me to edit the name of the macro." />
       </horizontal>
       <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60">
         <vertical pref-width="30">
           <text text="Content" align="Left" />
         </vertical>
-        <button text="~content-text" pref-width="30" on-click="clicked-content" />
+        <button text="~content-text" pref-width="30" on-click="clicked-content" hover-hint="Click me to edit the macro content/command." />
       </horizontal>
       <bool-setting text="Is Command" italics="false" value="is-command-value" bind-value="true" get-event="cmd" on-change="command-value-changed" apply-on-change="true" hover-hint="Turn this ON if this macro is a built-in twitch SLASH command (/slow, /clear). Keep this off if it's for a custom bot or just normal text." />
     </vertical>

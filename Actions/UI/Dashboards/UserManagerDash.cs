@@ -44,6 +44,9 @@ namespace Actions.UI.Dashboards
         [UIComponent("name-text")]
         protected readonly CurvedTextMeshPro nameText = null!;
 
+        [UIComponent("nothing-text")]
+        protected CurvedTextMeshPro nothingText = null!;
+
         protected CanvasGroup userContainerCanvas = null!;
         private IActionUser? _lastClickedUser;
         private bool opened = false;
@@ -66,6 +69,12 @@ namespace Actions.UI.Dashboards
 
         private void ActivityReceived(IActionUser user)
         {
+            if (nothingText != null)
+            {
+                nothingText.gameObject.SetActive(false);
+                nothingText = null!;
+            }
+
             // progen shift
             var firstHost = (userHosts[0] as UserHost)!;
 
