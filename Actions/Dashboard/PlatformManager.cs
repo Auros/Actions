@@ -34,7 +34,10 @@ namespace Actions.Dashboard
         private void Platform_ChannelActivity(IActionUser user)
         {
             // Combination Callback
-            ChannelActivity?.Invoke(user);
+            MainThreadInvoker.Invoke(() =>
+            {
+                ChannelActivity?.Invoke(user);
+            });
         }
 
         public void Dispose()

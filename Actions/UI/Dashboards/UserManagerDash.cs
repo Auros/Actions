@@ -188,6 +188,10 @@ namespace Actions.UI.Dashboards
 
             [UIValue("has-content")]
             protected bool HasContent => !(User is null);
+
+            [UIValue("username")]
+            protected string Username => User?.Name ?? "";
+
             public event PropertyChangedEventHandler? PropertyChanged;
 
             private Action<IActionUser>? _clickedCallback;
@@ -198,6 +202,7 @@ namespace Actions.UI.Dashboards
                 set
                 {
                     _user = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Username)));
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasContent)));
                     if (_user != null && _user.ProfilePictureURL != null)
                     {
