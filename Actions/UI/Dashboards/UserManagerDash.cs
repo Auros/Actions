@@ -107,13 +107,14 @@ namespace Actions.UI.Dashboards
             _platformManager.ChannelActivity -= ActivityReceived;
         }
 
-        protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
+        protected override async void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             if (firstActivation)
             {
                 for (int i = 0; i < 10; i++)
                     userHosts.Add(new UserHost(UserClicked));
             }
+            await SiraUtil.Utilities.AwaitSleep(1000);
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             if (firstActivation)
             {
@@ -226,7 +227,7 @@ namespace Actions.UI.Dashboards
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Username)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(HasContent)));
-                if (User != null)
+                if (User != null && _userImage != null)
                     _userImage.SetImage(User.ProfilePictureURL);
             }
         }
