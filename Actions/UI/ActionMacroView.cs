@@ -121,13 +121,23 @@ namespace Actions.UI
                 _editorModal.blockerClickedEvent -= Dismissed;
                 if (!string.IsNullOrWhiteSpace(macro.Name) && !string.IsNullOrWhiteSpace(macro.Content))
                 {
-                    _config.Macros.Add(macro);
-                    macroTable.data.Add(host);
-                    macroTable.tableView.ReloadData();
+                    AddMacro(macro, host);
                     NotifyPropertyChanged(nameof(WithinLimit));
                     _macroDash.MacroCreated(macro);
                 }
             }
+        }
+
+        public void AddMacro(Macro macro, Host? host = null)
+        {
+            if (_editorModal != null)
+            {
+                _config.Macros.Add(macro);
+                macroTable.data.Add(host ?? new Host(macro, EditMacro, DeleteMacro));
+                macroTable.tableView.ReloadData();
+                NotifyPropertyChanged(nameof(WithinLimit));
+            }
+            _macroDash.MacroCreated(macro);
         }
 
         private void EditMacro(Host host)

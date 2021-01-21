@@ -10,6 +10,7 @@
     <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="85">
       <bool-setting text="Show In Game" italics="false" hover-hint="Show the dashboards in game?" value="show-in-game" apply-on-change="true" />
       <bool-setting text="Do TTS Prefix" italics="false" hover-hint="Adds the ! in front of any macros that post to the chat." value="tts-prefix" apply-on-change="true" />
+      <bool-setting text="Allow Mods To Make Commands" italics="false" hover-hint="Allows your mods to create commands." value="allow-mods" apply-on-change="true" />
       <bool-setting text="Edit Mode" italics="false" face-color="#f5d142" hover-hint="Allows you to move around the dashboards." value="edit-mode" on-change="edit-mode-toggled" apply-on-change="true" get-event="update-edit" />
       <dropdown-list-setting text="Channel" italics="false" hover-hint="The channel to send messages to." value="channel" apply-on-change="true" options="channels" />
     </vertical>

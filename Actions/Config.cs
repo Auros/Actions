@@ -19,6 +19,8 @@ namespace Actions
         [NonNullable, UseConverter(typeof(ListConverter<Macro>))]
         public virtual List<Macro> Macros { get; set; } = new List<Macro>();
 
+        public virtual bool AllowModsToCreate { get; set; } = false;
+
         public virtual bool PrefixForTTS { get; set; } = true;
 
         public virtual bool ShowInGame { get; set; } = false;

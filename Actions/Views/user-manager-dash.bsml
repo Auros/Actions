@@ -17,11 +17,13 @@
   <modal size-delta-x="60" size-delta-y="35" show-event="show-modal" hide-event="hide-modal" clickerino-offerino-closerino="true">
     <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60" pref-height="35" pad="2">
       <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60" pad="2">
-        <text id="name-text"  align="Center" />
-        <slider-setting text="Timeout" value="timeout-value" formatter="format-timeout" min="0" max="13" integer-only="true" apply-on-change="true" font-size="4.88" />
+        <text id="name-text" align="Center" />
+        <text active="~not-normal" id="execute-text" font-size="4" align="Center" word-wrapping="true" />
+        <slider-setting active="~normal" text="Timeout" value="timeout-value" formatter="format-timeout" min="0" max="13" integer-only="true" apply-on-change="true" font-size="4.88" />
         <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="2">
           <button text="Cancel" event-click="hide-modal" pref-width="26" pref-height="10" />
-          <button text="Timeout" on-click="timeout" pref-width="26" pref-height="10" />
+          <button active="~normal" text="Timeout" on-click="timeout" pref-width="26" pref-height="10" />
+          <button active="~not-normal" text="Execute" on-click="execute" pref-width="26" pref-height="10" />
         </horizontal>
       </vertical>
     </vertical>

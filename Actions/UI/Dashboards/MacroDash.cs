@@ -26,6 +26,9 @@ namespace Actions.UI.Dashboards
         [Inject]
         private readonly PlatformManager _platformManager = null!;
 
+        [InjectOptional]
+        private readonly UserManagerDash? _userManagerDash = null!; 
+
         [UIValue("macro-hosts")]
         protected readonly List<object> macroHosts = new List<object>();
 
@@ -124,6 +127,11 @@ namespace Actions.UI.Dashboards
 
         private void MacroClicked(Macro macro)
         {
+            if (macro.Content.Contains("{name}") && !(_userManagerDash is null))
+            {
+                _userManagerDash.SetSpecialMacro(macro);
+                return;
+            }
             if (!macro.IsCommand)
             {
                 _platformManager.SendMessage(macro.Content);

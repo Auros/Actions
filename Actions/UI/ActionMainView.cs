@@ -43,6 +43,13 @@ namespace Actions.UI
             set => _config.ShowInGame = value;
         }
 
+        [UIValue("allow-mods")]
+        protected bool AllowMods
+        {
+            get => _config.AllowModsToCreate;
+            set => _config.AllowModsToCreate = value;
+        }
+
         [UIValue("edit-mode")]
         protected bool EditMode { get; set; }
 

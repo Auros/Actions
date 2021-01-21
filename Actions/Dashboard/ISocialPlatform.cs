@@ -1,4 +1,5 @@
 ﻿using System;
+using ChatCore.Interfaces;
 using System.Threading.Tasks;
 
 namespace Actions.Dashboard
@@ -11,5 +12,6 @@ namespace Actions.Dashboard
         Task<IActionUser?> GetUser(string id);
 
         event Action<IActionUser>? ChannelActivity;
+        event Action<IChatService, IChatMessage>? Messaged;
     }
 }

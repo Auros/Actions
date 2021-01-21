@@ -4,6 +4,7 @@
     {
         Seconds1,
         Seconds30,
+        Seconds69,
         Minutes1,
         Minutes5,
         Minutes10,

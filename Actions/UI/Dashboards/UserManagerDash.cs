@@ -10,6 +10,7 @@ using Actions.Components;
 using System.ComponentModel;
 using BeatSaberMarkupLanguage;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.FloatingScreen;
@@ -41,24 +42,66 @@ namespace Actions.UI.Dashboards
         [UIValue("timeout-value")]
         protected ManagementAction SelectedAction { get; set; }
 
+        [UIComponent("execute-text")]
+        protected readonly CurvedTextMeshPro executeText = null!;
+
         [UIComponent("name-text")]
         protected readonly CurvedTextMeshPro nameText = null!;
 
         [UIComponent("nothing-text")]
         protected CurvedTextMeshPro nothingText = null!;
 
+        private bool _normal;
+        [UIValue("normal")]
+        public bool Normal
+        {
+            get => _normal;
+            set
+            {
+                _normal = value;
+                NotifyPropertyChanged();
+                NotifyPropertyChanged(nameof(NotNormal));
+            }
+        }
+
+        [UIValue("not-normal")]
+        public bool NotNormal => !Normal;
+
         protected CanvasGroup userContainerCanvas = null!;
+        protected DateTime _specialCommandExecutionTime;
         private IActionUser? _lastClickedUser;
+        private string rootString = "";
+        protected Macro? _specialMacro;
         private bool opened = false;
 
         public void Initialize()
         {
             gameObject.SetActive(true);
+            rootString = gameObject.scene.name;
+            SceneManager.activeSceneChanged += SceneChanged;
             _platformManager.ChannelActivity += ActivityReceived;
 
             _floatingScreen!.HandleReleased += HandleReleased;
             _floatingScreen!.ScreenPosition = _config.UserManagerDashboardPosition;
             _floatingScreen!.ScreenRotation = Quaternion.Euler(_config.UserManagerDashboardRotation);
+        }
+
+        public void SetSpecialMacro(Macro macro)
+        {
+            _specialMacro = macro;
+            _specialCommandExecutionTime = DateTime.Now;
+        }
+
+        private void SceneChanged(Scene oldScene, Scene newScene)
+        {
+            if (newScene.name == rootString)
+            {
+                if (opened)
+                {
+                    foreach (UserHost host in userHosts)
+                        host.Update();
+                }
+            }
         }
 
         private void HandleReleased(object _, FloatingScreenHandleEventArgs e)
@@ -95,7 +138,7 @@ namespace Actions.UI.Dashboards
                 current.User = newer.User;
             }
             firstHost.User = user;
-            if (opened)
+            if (opened && isActiveAndEnabled)
             {
                 foreach (UserHost host in userHosts)
                     host.Update();
@@ -104,6 +147,7 @@ namespace Actions.UI.Dashboards
 
         public void Dispose()
         {
+            SceneManager.activeSceneChanged -= SceneChanged;
             _platformManager.ChannelActivity -= ActivityReceived;
         }
 
@@ -121,6 +165,7 @@ namespace Actions.UI.Dashboards
                 nameText.fontSizeMin = 4.5f;
                 nameText.fontSizeMax = 7.5f;
                 nameText.enableAutoSizing = true;
+                executeText.enableAutoSizing = true;
 
                 userContainerCanvas = userContainer.gameObject.AddComponent<CanvasGroup>();
                 userContainerCanvas.alpha = 0f;
@@ -157,6 +202,17 @@ namespace Actions.UI.Dashboards
             nameText.text = _lastClickedUser.Name;
             nameText.fontSizeMax = 10.0f;
             nameText.fontSizeMin = 4.5f;
+
+            if (_specialCommandExecutionTime.AddSeconds(10) > DateTime.Now && _specialMacro != null && _specialMacro.Content.Contains("{name}"))
+            {
+                executeText.text = _specialMacro.Content.Replace("{name}", user.Name);
+                _specialCommandExecutionTime = default;
+                executeText.fontSizeMax = 7.0f;
+                executeText.fontSizeMin = 2.5f;
+                Normal = false;
+                return;
+            }
+            Normal = true;
         }
 
         [UIAction("format-timeout")]
@@ -166,6 +222,7 @@ namespace Actions.UI.Dashboards
             {
                 ManagementAction.Seconds1 => "1 Second",
                 ManagementAction.Seconds30 => "30 Seconds",
+                ManagementAction.Seconds69 => "69 Seconds",
                 ManagementAction.Minutes1 => "1 Minute",
                 ManagementAction.Minutes5 => "5 Minutes",
                 ManagementAction.Minutes10 => "10 Minutes",
@@ -182,6 +239,23 @@ namespace Actions.UI.Dashboards
             }).ToString();
         }
 
+        [UIAction("execute")]
+        protected void Execute()
+        {
+            if (_lastClickedUser is null || !(_lastClickedUser is TwitchActionUser) || _specialMacro is null)
+                return;
+
+            var command = _specialMacro.Content.Replace("{name}", _lastClickedUser.Name);
+            if (_specialMacro.IsCommand)
+                _platformManager.SendCommand(command);
+            else
+                _platformManager.SendMessage(command);
+
+            _specialMacro = null;
+
+            parserParams.EmitEvent("hide-modal");
+        }
+
         [UIAction("timeout")]
         protected void Timeout()
         {
@@ -192,6 +266,7 @@ namespace Actions.UI.Dashboards
             {
                 ManagementAction.Seconds1 => 1,
                 ManagementAction.Seconds30 => 30,
+                ManagementAction.Seconds69 => 69,
                 ManagementAction.Minutes1 => 60,
                 ManagementAction.Minutes5 => 300,
                 ManagementAction.Minutes10 => 600,
@@ -208,6 +283,7 @@ namespace Actions.UI.Dashboards
             };
 
             _lastClickedUser.Ban(timeoutDuration);
+            parserParams.EmitEvent("hide-modal");
         }
 
         public class UserHost : INotifyPropertyChanged

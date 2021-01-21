@@ -40,6 +40,7 @@ namespace Actions.Twitch
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
+        public event Action<IChatService, IChatMessage>? Messaged;
         public void Initialize()
         {
             _ = InitializeAsync();
@@ -83,6 +84,10 @@ namespace Actions.Twitch
 
         private async void MessageReceived(IChatService service, IChatMessage message)
         {
+            MainThreadInvoker.Invoke(() =>
+            {
+                Messaged?.Invoke(service, message);
+            });
             IActionUser? user = await GetUser(message.Sender.DisplayName);
             if (user is null)
                 return;

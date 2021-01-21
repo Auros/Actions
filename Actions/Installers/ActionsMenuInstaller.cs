@@ -1,6 +1,7 @@
 ﻿using Zenject;
 using SiraUtil;
 using Actions.UI;
+using Actions.Managers;
 
 namespace Actions.Installers
 {
@@ -8,6 +9,7 @@ namespace Actions.Installers
     {
         public override void InstallBindings()
         {
+            Container.BindInterfacesAndSelfTo<CommandCreator>().AsSingle();
             Container.BindInterfacesAndSelfTo<MenuButtonManager>().AsSingle();
             Container.Bind<ActionMainView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<ActionMacroView>().FromNewComponentAsViewController().AsSingle();
