@@ -42,12 +42,19 @@ namespace Actions.UI.Dashboards
 
         public void Initialize()
         {
-            gameObject.SetActive(true);
+            gameObject.SetActive(_config.Enabled);
 
+            _config.Updated += Config_Updated;
             _floatingScreen!.HandleReleased += HandleReleased;
             _floatingScreen!.HandleSide = FloatingScreen.Side.Right;
             _floatingScreen!.ScreenPosition = _config.MacroDashboardPosition;
             _floatingScreen!.ScreenRotation = Quaternion.Euler(_config.MacroDashboardRotation);
+            macroContainerCanvas.gameObject.SetActive(false);
+        }
+
+        private void Config_Updated(Config config)
+        {
+            gameObject.SetActive(config.Enabled);
         }
 
         private void HandleReleased(object _, FloatingScreenHandleEventArgs e)
@@ -58,6 +65,7 @@ namespace Actions.UI.Dashboards
 
         public void Dispose()
         {
+            _config.Updated -= Config_Updated;
             _floatingScreen!.HandleReleased -= HandleReleased;
         }
 

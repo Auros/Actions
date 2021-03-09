@@ -7,14 +7,19 @@ using System.Collections.Generic;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
 using System.Runtime.CompilerServices;
+using System;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 namespace Actions
 {
     internal class Config
     {
+        public event Action<Config>? Updated;
+
         [NonNullable, UseConverter(typeof(VersionConverter))]
         public virtual Version Version { get; set; } = new Version("0.0.0");
+
+        public virtual bool Enabled { get; set; } = true;
 
         [NonNullable, UseConverter(typeof(ListConverter<Macro>))]
         public virtual List<Macro> Macros { get; set; } = new List<Macro>();
@@ -31,5 +36,10 @@ namespace Actions
         [UseConverter(typeof(Vector3Converter))] public Vector3 MacroDashboardRotation { get; set; } = new Vector3(0f, 180f, 0f);
         [UseConverter(typeof(Vector3Converter))] public Vector3 UserManagerDashboardPosition { get; set; } = new Vector3(-1.2f, 1.5f, -1.5f);
         [UseConverter(typeof(Vector3Converter))] public Vector3 UserManagerDashboardRotation { get; set; } = new Vector3(0f, 180f, 0f);
+
+        public virtual void Changed()
+        {
+            Updated?.Invoke(this);
+        }
     }
 }

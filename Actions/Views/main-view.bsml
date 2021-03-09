@@ -8,6 +8,7 @@
       <image src="Actions.Resources.logo.png" pref-height="20" preserve-aspect="true" />
     </vertical>
     <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="85">
+      <bool-setting text="Enabled" italics="false" hover-hint="Enable This Mod" value="enabled" apply-on-change="true" />
       <bool-setting text="Show In Game" italics="false" hover-hint="Show the dashboards in game?" value="show-in-game" apply-on-change="true" />
       <bool-setting text="Do TTS Prefix" italics="false" hover-hint="Adds the ! in front of any macros that post to the chat." value="tts-prefix" apply-on-change="true" />
       <bool-setting text="Allow Mods To Make Commands" italics="false" hover-hint="Allows your mods to create commands." value="allow-mods" apply-on-change="true" />

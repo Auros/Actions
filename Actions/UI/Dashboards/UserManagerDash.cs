@@ -76,14 +76,20 @@ namespace Actions.UI.Dashboards
 
         public void Initialize()
         {
-            gameObject.SetActive(true);
+            gameObject.SetActive(_config.Enabled);
             rootString = gameObject.scene.name;
             SceneManager.activeSceneChanged += SceneChanged;
             _platformManager.ChannelActivity += ActivityReceived;
 
+            _config.Updated += Config_Updated;
             _floatingScreen!.HandleReleased += HandleReleased;
             _floatingScreen!.ScreenPosition = _config.UserManagerDashboardPosition;
             _floatingScreen!.ScreenRotation = Quaternion.Euler(_config.UserManagerDashboardRotation);
+        }
+
+        private void Config_Updated(Config config)
+        {
+            gameObject.SetActive(config.Enabled);
         }
 
         public void SetSpecialMacro(Macro macro)
@@ -147,7 +153,9 @@ namespace Actions.UI.Dashboards
 
         public void Dispose()
         {
+            _config.Updated -= Config_Updated;
             SceneManager.activeSceneChanged -= SceneChanged;
+            _floatingScreen!.HandleReleased -= HandleReleased;
             _platformManager.ChannelActivity -= ActivityReceived;
         }
 

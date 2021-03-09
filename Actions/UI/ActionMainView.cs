@@ -22,6 +22,13 @@ namespace Actions.UI
 
         public event Action<bool>? EditModeToggled;
 
+        [UIValue("enabled")]
+        protected bool Enabled
+        {
+            get => _config.Enabled;
+            set => _config.Enabled = value;
+        }
+
         [UIValue("channel")]
         protected string Channel
         {
