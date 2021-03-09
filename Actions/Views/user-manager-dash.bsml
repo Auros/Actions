@@ -19,7 +19,7 @@
       <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="60" pad="2">
         <text id="name-text" align="Center" />
         <text active="~not-normal" id="execute-text" font-size="4" align="Center" word-wrapping="true" />
-        <slider-setting active="~normal" text="Timeout" value="timeout-value" formatter="format-timeout" min="0" max="13" integer-only="true" apply-on-change="true" font-size="4.88" />
+        <slider-setting active="~normal" text="Timeout" value="timeout-value" formatter="format-timeout" min="0" max="14" integer-only="true" apply-on-change="true" font-size="4.88" />
         <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" spacing="2">
           <button text="Cancel" event-click="hide-modal" pref-width="26" pref-height="10" />
           <button active="~normal" text="Timeout" on-click="timeout" pref-width="26" pref-height="10" />

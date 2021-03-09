@@ -87,9 +87,11 @@ namespace Actions.UI.Dashboards
 
         public void MacroCreated(Macro macro)
         {
-            var host = macroHosts.Cast<MacroHost>().FirstOrDefault(mh => mh.Macro == null);
-            if (host is null)
+            var castedHosts = macroHosts.Cast<MacroHost>();
+            var host = castedHosts.FirstOrDefault(mh => mh.Macro == null);
+            if (host is null || castedHosts.Any(mh => mh.Macro == macro))
                 return;
+
             host.Macro = macro;
             nothingText.gameObject.SetActive(false);
         }
@@ -116,7 +118,14 @@ namespace Actions.UI.Dashboards
         {
             _tweeningManager.KillAllTweens(this);
             var currentAlpha = macroContainerCanvas.alpha;
-            _tweeningManager.AddTween(new FloatTween(currentAlpha, opened ? 0f : 1f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
+            if (!opened)
+                macroContainerCanvas.gameObject.SetActive(true);
+            var tween = _tweeningManager.AddTween(new FloatTween(currentAlpha, opened ? 0f : 1f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
+            tween.onCompleted += delegate ()
+            {
+                if (!opened)
+                    macroContainerCanvas.gameObject.SetActive(false);
+            };
             opened = !opened;
         }
 

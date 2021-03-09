@@ -179,10 +179,16 @@ namespace Actions.UI.Dashboards
             var currentAlpha = userContainerCanvas.alpha;
             if (opened)
             {
-                _tweeningManager.AddTween(new FloatTween(currentAlpha, 0f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
+                var tween = _tweeningManager.AddTween(new FloatTween(currentAlpha, 0f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);
+                tween.onCompleted += delegate ()
+                {
+                    if (!opened)
+                        userContainerCanvas.gameObject.SetActive(false);
+                };
             }
             else
             {
+                userContainerCanvas.gameObject.SetActive(true);
                 foreach (UserHost user in userHosts)
                     user.Update();
                 _tweeningManager.AddTween(new FloatTween(currentAlpha, 1f, UpdateCanvasAlpha, 0.5f, EaseType.InOutQuad), this);

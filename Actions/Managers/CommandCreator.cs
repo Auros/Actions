@@ -27,7 +27,7 @@ namespace Actions.Managers
         private void Messaged(IChatService service, IChatMessage msg)
         {
             const string cmd = "!actionscreate";
-            if ((_config.AllowModsToCreate && msg.Sender.IsModerator) || msg.Sender.IsBroadcaster)
+            if (_config.Channel.ToLower() == msg.Channel.Name.ToLower() && ((_config.AllowModsToCreate && msg.Sender.IsModerator) || msg.Sender.IsBroadcaster))
             {
                 if (msg.Message.StartsWith(cmd))
                 {
