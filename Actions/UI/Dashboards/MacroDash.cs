@@ -144,7 +144,7 @@ namespace Actions.UI.Dashboards
 
         private void MacroClicked(Macro macro)
         {
-            if (macro.Content.Contains("{name}") && !(_userManagerDash is null))
+            if (macro.Content.Contains("{user}") && !(_userManagerDash is null))
             {
                 _userManagerDash.SetSpecialMacro(macro);
                 return;

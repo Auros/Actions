@@ -166,7 +166,7 @@ namespace Actions.UI.Dashboards
                 for (int i = 0; i < 10; i++)
                     userHosts.Add(new UserHost(UserClicked));
             }
-            await SiraUtil.Utilities.AwaitSleep(1000);
+            await SiraUtil.Utilities.AwaitSleep(100);
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             if (firstActivation)
             {
@@ -217,9 +217,9 @@ namespace Actions.UI.Dashboards
             nameText.fontSizeMax = 10.0f;
             nameText.fontSizeMin = 4.5f;
 
-            if (_specialCommandExecutionTime.AddSeconds(10) > DateTime.Now && _specialMacro != null && _specialMacro.Content.Contains("{name}"))
+            if (_specialCommandExecutionTime.AddSeconds(10) > DateTime.Now && _specialMacro != null && _specialMacro.Content.Contains("{user}"))
             {
-                executeText.text = _specialMacro.Content.Replace("{name}", user.Name);
+                executeText.text = _specialMacro.Content.Replace("{user}", user.Name);
                 _specialCommandExecutionTime = default;
                 executeText.fontSizeMax = 7.0f;
                 executeText.fontSizeMin = 2.5f;
@@ -259,7 +259,7 @@ namespace Actions.UI.Dashboards
             if (_lastClickedUser is null || !(_lastClickedUser is TwitchActionUser) || _specialMacro is null)
                 return;
 
-            var command = _specialMacro.Content.Replace("{name}", _lastClickedUser.Name);
+            var command = _specialMacro.Content.Replace("{user}", _lastClickedUser.Name);
             if (_specialMacro.IsCommand)
                 _platformManager.SendCommand(command);
             else
