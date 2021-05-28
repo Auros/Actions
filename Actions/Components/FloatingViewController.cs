@@ -96,9 +96,9 @@ namespace Actions.Components
             PhysicsRaycaster(ref graphicRaycaster) = physicsRaycasterWithCache;
             _floatingScreen.SetRootViewController(this, AnimationType.None);
             _floatingScreen.name = $"{typeof(T).Name}Screen";
-            _floatingScreen.gameObject.layer = 27;
+            _floatingScreen.gameObject.layer = 5;
             name = $"{typeof(T).Name}View";
-            gameObject.layer = 27;
+            gameObject.layer = 5;
         }
     }
 }
