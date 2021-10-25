@@ -16,8 +16,8 @@ namespace Actions
     {
         public event Action<Config>? Updated;
 
-        [NonNullable, UseConverter(typeof(VersionConverter))]
-        public virtual Version Version { get; set; } = new Version("0.0.0");
+        [NonNullable, UseConverter(typeof(HiveVersionConverter))]
+        public virtual Hive.Versioning.Version Version { get; set; } = new Hive.Versioning.Version("0.0.0");
 
         public virtual bool Enabled { get; set; } = true;
 

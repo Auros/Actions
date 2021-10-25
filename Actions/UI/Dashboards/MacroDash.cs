@@ -21,7 +21,7 @@ namespace Actions.UI.Dashboards
         private readonly Config _config = null!;
 
         [Inject]
-        private readonly TweeningManager _tweeningManager = null!;
+        private readonly TimeTweeningManager _tweeningManager = null!;
 
         [Inject]
         private readonly PlatformManager _platformManager = null!;

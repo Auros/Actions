@@ -27,7 +27,7 @@ namespace Actions
         internal Http([Inject(Id = nameof(Actions))] PluginMetadata metadata)
         {
             PersistentRequestHeaders = new Dictionary<string, string>();
-            string userAgent = $"{metadata.Name}/{metadata.Version}";
+            string userAgent = $"{metadata.Name}/{metadata.HVersion}";
             PersistentRequestHeaders.Add("User-Agent", userAgent);
         }
 
