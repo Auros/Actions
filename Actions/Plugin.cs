@@ -17,7 +17,7 @@ namespace Actions
         public Plugin(Conf conf, IPALogger log, Zenjector zenjector, PluginMetadata metadata)
         {
             Config config = conf.Generated<Config>();
-            config.Version = metadata.Version;
+            config.Version = metadata.HVersion;
 
             zenjector
                 .On<PCAppInit>()
