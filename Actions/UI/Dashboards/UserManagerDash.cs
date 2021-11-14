@@ -274,7 +274,7 @@ namespace Actions.UI.Dashboards
         [UIAction("timeout")]
         protected void Timeout()
         {
-            if (_lastClickedUser is null || !(_lastClickedUser is TwitchActionUser))
+            if (!(_lastClickedUser is TwitchActionUser))
                 return;
 
             float? timeoutDuration = SelectedAction switch
