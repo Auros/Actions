@@ -1,94 +1,83 @@
 ﻿using System;
-using Zenject;
-using ChatCore;
-using SiraUtil.Extras;
-using System.Linq;
-using IPA.Utilities;
-using SiraUtil.Logging;
-using Newtonsoft.Json;
-using System.Threading;
-using Actions.Dashboard;
-using ChatCore.Interfaces;
-using System.Threading.Tasks;
-using ChatCore.Services.Twitch;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Actions.Dashboard;
+using CatCore;
+using CatCore.Models.EventArgs;
+using CatCore.Models.Twitch;
+using CatCore.Models.Twitch.IRC;
+using CatCore.Services.Multiplexer;
+using CatCore.Services.Twitch.Interfaces;
+using SiraUtil.Tools;
+using Zenject;
 
 namespace Actions.Twitch
 {
     internal class TwitchSocialPlatform : ISocialPlatform, IInitializable, IDisposable
     {
-        private readonly Http _http;
         private readonly Config _config;
         private readonly SiraLog _siraLog;
-        private readonly CancellationTokenSource _cancellationTokenSource;
+        
+        private CatCoreInstance _chatCoreInstance = null!;
+        private ITwitchService _twitchService = null!;
+        private ITwitchChannelManagementService _twitchChannelManagementService = null!;
+        private ITwitchHelixApiService _twitchHelixApiService = null!;
 
-        private string? ClientID { get; set; }
-        private string? AuthToken { get; set; }
-        public bool Initialized => !(ClientID is null || AuthToken is null || _config.Channel is null);
-
-        private TwitchService _twitchService = null!;
-        public event Action<IActionUser>? ChannelActivity;
-        private ChatCoreInstance _chatCoreInstance = null!;
-        public IReadOnlyList<string> Channels = new List<string>();
+        private TwitchChannel? _channel;
         private readonly Dictionary<string, IActionUser> _userCache = new Dictionary<string, IActionUser>();
 
-        public TwitchSocialPlatform(Http http, Config config, SiraLog siraLog)
+        public event Action<IActionUser>? ChannelActivity;
+        public IReadOnlyList<TwitchChannel> Channels = new List<TwitchChannel>();
+        public bool Initialized => _twitchService.LoggedIn && _config.ChannelId != null;
+
+        public TwitchSocialPlatform(Config config, SiraLog siraLog)
         {
-            _http = http;
             _config = config;
             _siraLog = siraLog;
-            _cancellationTokenSource = new CancellationTokenSource();
+            
+            _config.Updated -= OnConfigUpdated;
+            _config.Updated += OnConfigUpdated;
         }
 
-        public event Action<IChatService, IChatMessage>? Messaged;
+        public event Action<MultiplexedPlatformService, MultiplexedMessage>? Messaged;
         public void Initialize()
         {
             _ = InitializeAsync();
         }
 
-        private async Task InitializeAsync()
+        private Task InitializeAsync()
         {
-            _chatCoreInstance = ChatCoreInstance.Create();
+            _chatCoreInstance = CatCoreInstance.Create();
             _twitchService = _chatCoreInstance.RunTwitchServices();
+            _twitchHelixApiService = _twitchService.GetHelixApiService();
+            _twitchChannelManagementService = _twitchService.GetChannelManagementService();
+            
+            Channels = _twitchChannelManagementService.GetAllActiveChannels();
+
+            if (_config.ChannelId != null)
+            {
+                _channel = Channels.FirstOrDefault(twitchChannel => twitchChannel.Id == _config.ChannelId);
+            }
+            
+            if (_channel == null)
+            {
+                _channel = (TwitchChannel?)_twitchService.DefaultChannel ?? Channels.FirstOrDefault();
+                _config.ChannelId = _channel?.Id;
+            }
+
+            _siraLog.Debug($"Channel: {_channel?.Name ?? "None"}");
+
             _twitchService.OnTextMessageReceived += MessageReceived;
-            string? authToken = _twitchService.GetProperty<string, TwitchService>("OAuthToken")?.Replace("oauth:", "");
-            if (authToken is null)
-            {
-                return;
-            }
-            AuthToken = authToken;
-            _siraLog.Debug($"Fetching OAuth Validation.");
-            HttpResponse response = await _http.GetAsync("https://id.twitch.tv/oauth2/validate", AuthToken!);
-            if (response.Successful)
-            {
-                _siraLog.Debug("Success. Deserializing response.");
-                var validation = JsonConvert.DeserializeObject<ValidationResponse>(response.Content!);
-                await Utilities.AwaitSleep(2000);
+            _twitchChannelManagementService.ChannelsUpdated += TwitchChannelManagementServiceOnChannelsUpdated;
 
-                var list = new List<string>();
-                foreach (var channel in _twitchService.Channels.Values)
-                    list.Add(channel.Id);
-                Channels = list;
-
-                _config.Channel = (string.IsNullOrWhiteSpace(_config.Channel) ? _twitchService.Channels.Values.FirstOrDefault()?.Id : _config.Channel) ?? "None";
-                ClientID = validation.ClientID;
-
-                _siraLog.Debug($"Channel: {_config.Channel}");
-                _siraLog.Debug($"ClientID: {ClientID}");
-            }
-            else
-            {
-                _siraLog.Error(response.Content);
-            }
+            return Task.CompletedTask;
         }
 
-        private async void MessageReceived(IChatService service, IChatMessage message)
+        private async void MessageReceived(ITwitchService service, TwitchMessage message)
         {
-            MainThreadInvoker.Invoke(() =>
-            {
-                Messaged?.Invoke(service, message);
-            });
-            IActionUser? user = await GetUser(message.Sender.DisplayName);
+            MainThreadInvoker.Invoke(() => Messaged?.Invoke(MultiplexedPlatformService.From<ITwitchService, TwitchChannel,TwitchMessage>(service), MultiplexedMessage.From<TwitchMessage, TwitchChannel>(message)));
+            IActionUser? user = await GetUser(message.Sender.UserName);
             if (user is null)
                 return;
             ChannelActivity?.Invoke(user);
@@ -96,9 +85,11 @@ namespace Actions.Twitch
 
         public void Dispose()
         {
+            _config.Updated -= OnConfigUpdated;
+            
+            _twitchChannelManagementService.ChannelsUpdated -= TwitchChannelManagementServiceOnChannelsUpdated;
             _twitchService.OnTextMessageReceived -= MessageReceived;
             _chatCoreInstance.StopTwitchServices();
-            _cancellationTokenSource.Cancel();
         }
 
         public async Task<IActionUser?> GetUser(string login)
@@ -111,12 +102,12 @@ namespace Actions.Twitch
             {
                 if (login == "[tmi.twitch.tv]") return null;
                 _siraLog.Debug($"Fetching User [{login}]");
-                var response = await _http.GetAsync($"https://api.twitch.tv/helix/users?login={login}", AuthToken!, ClientID);
-                if (response.Successful)
+                var response = await _twitchHelixApiService.FetchUserInfo(userIds: new[] { login });
+                if (response != null)
                 {
-                    User user = JsonConvert.DeserializeObject<UserResponse>(response.Content!).Users[0];
-                    _siraLog.Debug($"Successfully fetched user [{user.DisplayName}].");
-                    usr = new TwitchActionUser(this, user);
+                    var userData = response.Value.Data[0];
+                    _siraLog.Debug($"Successfully fetched user [{userData.DisplayName}].");
+                    usr = new TwitchActionUser(this, userData);
                     if (!_userCache.ContainsKey(login))
                     {
                         _userCache.Add(login, usr);
@@ -130,16 +121,46 @@ namespace Actions.Twitch
 
         public Task SendMessage(string msg)
         {
-            if (Initialized && _config.Channel != "None")
-                _twitchService.SendTextMessage(msg, _config.Channel!);
+            if (Initialized)
+            {
+                _channel?.SendMessage(msg);
+            }
+
             return Task.CompletedTask;
         }
 
         public Task SendCommand(string command)
         {
-            if (Initialized && _config.Channel != "None")
-                _twitchService.SendCommand(command, _config.Channel!);
-            return Task.CompletedTask;
+            return SendMessage('/' + command);
+        }
+        
+        private void OnConfigUpdated(Config config)
+        {
+            var channelId = config.ChannelId;
+            if (channelId != _channel?.Id)
+            {
+                _channel = channelId != null
+                    ? Channels.FirstOrDefault(twitchChannel => twitchChannel.Id == channelId)
+                    : null;
+
+                _siraLog.Debug($"Changed target channel to {_channel?.Name}");
+            }
+            else
+            {
+                _siraLog.Debug("No change");
+            }
+        }
+        
+        private void TwitchChannelManagementServiceOnChannelsUpdated(object sender, TwitchChannelsUpdatedEventArgs e)
+        {
+            if (_channel != null && e.DisabledChannels.ContainsKey(_channel.Id))
+            {
+                _siraLog.Debug($"Our target channel {_channel.Name} got disabled");
+
+                // TODO: Look into how we actually want to handle this behavior later down the line.
+                _channel = null;
+                _config.ChannelId = null;
+            }
         }
     }
 }

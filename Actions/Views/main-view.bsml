@@ -1,4 +1,4 @@
-﻿<bg horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
+﻿<bg horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation='https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd'>
   <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
     <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="85">
       <text text="~version" align="Left" font-size="5" face-color="grey" />
@@ -13,7 +13,7 @@
       <bool-setting text="Do TTS Prefix" italics="false" hover-hint="Adds the ! in front of any macros that post to the chat." value="tts-prefix" apply-on-change="true" />
       <bool-setting text="Allow Mods To Make Commands" italics="false" hover-hint="Allows your mods to create commands." value="allow-mods" apply-on-change="true" />
       <bool-setting text="Edit Mode" italics="false" face-color="#f5d142" hover-hint="Allows you to move around the dashboards." value="edit-mode" on-change="edit-mode-toggled" apply-on-change="true" get-event="update-edit" />
-      <dropdown-list-setting text="Channel" italics="false" hover-hint="The channel to send messages to." value="channel" apply-on-change="true" options="channels" />
+      <dropdown-list-setting text="Channel" italics="false" hover-hint="The channel to send messages to." value="channel" apply-on-change="true" options="channels" formatter="channel-formatter" />
     </vertical>
   </vertical>
 </bg>

@@ -1,6 +1,6 @@
-﻿using Zenject;
+﻿using Actions.Dashboard;
 using Actions.Twitch;
-using Actions.Dashboard;
+using Zenject;
 
 namespace Actions.Installers
 {
@@ -8,7 +8,6 @@ namespace Actions.Installers
     {
         public override void InstallBindings()
         {
-            Container.Bind<Http>().AsSingle();
             Container.BindInterfacesTo<TwitchSocialPlatform>().AsSingle();
             Container.BindInterfacesAndSelfTo<PlatformManager>().AsSingle();
         }

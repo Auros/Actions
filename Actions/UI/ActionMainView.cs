@@ -1,12 +1,14 @@
 ﻿using System;
-using Zenject;
-using System.Linq;
-using UnityEngine;
-using Actions.Dashboard;
 using System.Collections.Generic;
-using BeatSaberMarkupLanguage.Parser;
+using System.Linq;
+using Actions.Dashboard;
+using Actions.Twitch;
+using CatCore.Models.Twitch;
 using BeatSaberMarkupLanguage.Attributes;
+using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.ViewControllers;
+using UnityEngine;
+using Zenject;
 
 namespace Actions.UI
 {
@@ -30,10 +32,10 @@ namespace Actions.UI
         }
 
         [UIValue("channel")]
-        protected string Channel
+        protected TwitchChannel? Channel
         {
-            get => _config.Channel;
-            set => _config.Channel = value;
+            get => Channels.OfType<TwitchChannel>().FirstOrDefault(x => x.Id == _config.ChannelId);
+            set => _config.ChannelId = value?.Id;
         }
 
         [UIValue("tts-prefix")]
@@ -64,7 +66,13 @@ namespace Actions.UI
         protected string Version => $"v{_config.Version}";
 
         [UIValue("channels")]
-        protected readonly List<object> channels = new List<object>();
+        protected readonly List<object> Channels = new List<object>();
+        
+        [UIAction("channel-formatter")]
+        public string MaxQueueSizeFormat(TwitchChannel? twitchChannel)
+        {
+            return twitchChannel?.Name ?? "None";
+        }
 
         [UIParams]
         protected readonly BSMLParserParams parserParams = null!;
@@ -72,8 +80,8 @@ namespace Actions.UI
         protected override void DidActivate(bool firstActivation, bool addedToHierarchy, bool screenSystemEnabling)
         {
             if (firstActivation)
-                if (_socialPlatform is Twitch.TwitchSocialPlatform tsp)
-                    channels.AddRange(tsp.Channels.Cast<object>());
+                if (_socialPlatform is TwitchSocialPlatform tsp)
+                    Channels.AddRange(tsp.Channels);
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
         }
 

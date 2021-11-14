@@ -55,8 +55,8 @@
           <HintPath>$(BeatSaberDir)\Plugins\BSML.dll</HintPath>
           <Private>False</Private>
         </Reference>
-        <Reference Include="ChatCore">
-          <HintPath>$(BeatSaberDir)\Libs\ChatCore.dll</HintPath>
+        <Reference Include="CatCore">
+          <HintPath>$(BeatSaberDir)\Libs\CatCore.dll</HintPath>
           <Private>False</Private>
         </Reference>
         <Reference Include="Colors">

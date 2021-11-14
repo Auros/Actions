@@ -1,5 +1,6 @@
-﻿using Actions.Dashboard;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Actions.Dashboard;
+using CatCore.Models.Twitch.Helix.Responses;
 
 namespace Actions.Twitch
 {
@@ -11,11 +12,11 @@ namespace Actions.Twitch
         public string Name { get; set; } = null!;
         public string? ProfilePictureURL { get; set; } = null!;
 
-        public TwitchActionUser(ISocialPlatform socialPlatform, User user)
+        public TwitchActionUser(ISocialPlatform socialPlatform, UserData user)
         {
-            ID = user.ID;
+            ID = user.UserId;
             Name = user.DisplayName;
-            ProfilePictureURL = user.ProfileImageURL;
+            ProfilePictureURL = user.ProfileImageUrl;
             _socialPlatform = socialPlatform;
         }
 

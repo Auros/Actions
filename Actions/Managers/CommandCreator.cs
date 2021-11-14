@@ -1,8 +1,8 @@
 ﻿using System;
-using Zenject;
-using Actions.UI;
 using Actions.Dashboard;
-using ChatCore.Interfaces;
+using Actions.UI;
+using CatCore.Services.Multiplexer;
+using Zenject;
 
 namespace Actions.Managers
 {
@@ -24,10 +24,10 @@ namespace Actions.Managers
             _socialPlatform.Messaged += Messaged;
         }
 
-        private void Messaged(IChatService service, IChatMessage msg)
+        private void Messaged(MultiplexedPlatformService service, MultiplexedMessage msg)
         {
             const string cmd = "!bsan";
-            if (_config.Channel.ToLower() == msg.Channel.Name.ToLower() && ((_config.AllowModsToCreate && msg.Sender.IsModerator) || msg.Sender.IsBroadcaster))
+            if (string.Equals(_config.ChannelId, msg.Channel.Id, StringComparison.CurrentCultureIgnoreCase) && (msg.Sender.IsBroadcaster || (_config.AllowModsToCreate && msg.Sender.IsModerator)))
             {
                 if (msg.Message.StartsWith(cmd))
                 {
