@@ -72,7 +72,7 @@ namespace Actions.UI.Dashboards
         private IActionUser? _lastClickedUser;
         private string rootString = "";
         protected Macro? _specialMacro;
-        private bool opened = false;
+        public bool opened = false;
 
         public void Initialize()
         {
@@ -181,7 +181,7 @@ namespace Actions.UI.Dashboards
         }
 
         [UIAction("toggle")]
-        protected void Clicked()
+        public void Clicked()
         {
             _tweeningManager.KillAllTweens(this);
             var currentAlpha = userContainerCanvas.alpha;

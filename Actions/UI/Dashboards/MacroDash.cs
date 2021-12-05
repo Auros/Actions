@@ -146,6 +146,7 @@ namespace Actions.UI.Dashboards
         {
             if (macro.Content.Contains("{user}") && !(_userManagerDash is null))
             {
+                if (!_userManagerDash.opened) _userManagerDash.Clicked();
                 _userManagerDash.SetSpecialMacro(macro);
                 return;
             }
