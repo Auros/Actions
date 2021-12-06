@@ -14,7 +14,6 @@ using UnityEngine.SceneManagement;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.FloatingScreen;
-using IPA.Utilities;
 
 namespace Actions.UI.Dashboards
 {
