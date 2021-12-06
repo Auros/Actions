@@ -1,6 +1,9 @@
 ﻿<bg horizontal-fit="PreferredSize" vertical-fit="PreferredSize" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://monkeymanboy.github.io/BSML-Docs/ https://raw.githubusercontent.com/monkeymanboy/BSML-Docs/gh-pages/BSMLSchema.xsd">
   <vertical id="user-container" horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="75" pref-height="75">
-    <grid horizontal-fit="Unconstrained" vertical-fit="Unconstrained" child-align="MiddleLeft" cell-size-x="14" cell-size-y="14" spacing-x="1" spacing-y="1">
+    <vertical ignore-layout="true" anchor-pos-y="10">
+      <text active="~select-user" id="select-user-text" text="Select a user to use the macro on!" align="Center" font-color="#9C00FF"/>
+    </vertical>
+	<grid horizontal-fit="Unconstrained" vertical-fit="Unconstrained" child-align="MiddleLeft" cell-size-x="14" cell-size-y="14" spacing-x="1" spacing-y="1">
       <macro.for-each hosts="user-hosts">
         <clickable-image id="user-image" active="~has-content" on-click="clicked" pref-width="14" pref-height="14">
           <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="14" pref-height="14">
