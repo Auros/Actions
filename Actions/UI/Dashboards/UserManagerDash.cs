@@ -116,7 +116,7 @@ namespace Actions.UI.Dashboards
 
         private async void ShowSelectUserText()
         {
-            ShowSelectUserTextQueue += 1; // If the user uses a special macro than uses another macro before the AwaitSleep finishes the text will hide itself too early.
+            ShowSelectUserTextQueue += 1; // If the user uses a special macro then uses another macro before the AwaitSleep finishes the text will hide itself early.
             // This is an odd little fix but I didn't want to go into cancellation token shenanigans
             selectUserText.alpha = 0;
             SelectUser = true;
