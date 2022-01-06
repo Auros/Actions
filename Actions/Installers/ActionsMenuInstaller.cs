@@ -13,7 +13,7 @@ namespace Actions.Installers
             Container.Bind<ActionMainView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<ActionMacroView>().FromNewComponentAsViewController().AsSingle();
 
-            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject().WithGameObjectName(nameof(ActionFlowCoordinator)).AsSingle();
         }
     }
 }

@@ -19,16 +19,12 @@ namespace Actions
             config.Version = metadata.HVersion;
 
             zenjector.UseLogger(log);
-            zenjector.Install<ActionsCoreInstaller>(Location.App);
-            zenjector.Install(Location.App, container =>
-            {
-                container.BindInstance(config).AsSingle();
-                container.BindInstance(metadata).WithId(nameof(Actions)).AsCached();
-            });
-
+            zenjector.UseMetadataBinder<Plugin>();
+            
+            zenjector.Install<ActionsCoreInstaller>(Location.App, config);
             zenjector.Install<ActionsMenuInstaller>(Location.Menu);
-            zenjector.Install<ActionsDashboardMenuInstaller>(Location.Menu);
-            zenjector.Install<ActionsDashboardGameInstaller>(Location.Player);
+            zenjector.Install<ActionsDashboardInstaller>(Location.Menu, null!);
+            zenjector.Install<ActionsDashboardInstaller>(Location.Tutorial | Location.Player, config);
         }
     }
 }
