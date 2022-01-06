@@ -6,7 +6,6 @@ using System.Linq;
 using Actions.Dashboard;
 using Actions.UI.Dashboards;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
 using BeatSaberMarkupLanguage.Components;
@@ -99,7 +98,7 @@ namespace Actions.UI
                 }
             }
             NotifyPropertyChanged(nameof(WithinLimit));
-            await Task.Delay(100);
+            await SiraUtil.Extras.Utilities.PauseChamp;
             macroTable.tableView.ReloadData();
         }
 
