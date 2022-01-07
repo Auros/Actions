@@ -9,7 +9,7 @@ using CatCore.Models.Twitch;
 using CatCore.Models.Twitch.IRC;
 using CatCore.Services.Multiplexer;
 using CatCore.Services.Twitch.Interfaces;
-using SiraUtil.Tools;
+using SiraUtil.Logging;
 using Zenject;
 
 namespace Actions.Twitch
@@ -74,9 +74,21 @@ namespace Actions.Twitch
             return Task.CompletedTask;
         }
 
-        private async void MessageReceived(ITwitchService service, TwitchMessage message)
+        private void MessageReceived(ITwitchService service, TwitchMessage message)
         {
-            MainThreadInvoker.Invoke(() => Messaged?.Invoke(MultiplexedPlatformService.From<ITwitchService, TwitchChannel,TwitchMessage>(service), MultiplexedMessage.From<TwitchMessage, TwitchChannel>(message)));
+            _ = Task.Run(() => HandleMessageReceivedInternal(service, message));
+        }
+
+        private async Task HandleMessageReceivedInternal(ITwitchService service, TwitchMessage message)
+        {
+            if (_channel != null && message.Channel.Id != _channel.Id)
+            {
+                return;
+            }
+
+            MainThreadInvoker.Invoke(() => Messaged?.Invoke(
+                MultiplexedPlatformService.From<ITwitchService, TwitchChannel, TwitchMessage>(service), 
+                MultiplexedMessage.From<TwitchMessage, TwitchChannel>(message)));
             IActionUser? user = await GetUser(message.Sender.UserName);
             if (user is null)
                 return;
@@ -98,23 +110,24 @@ namespace Actions.Twitch
             {
                 return usr;
             }
-            if (Initialized)
+
+            if (!Initialized || login == "tmi.twitch.tv")
             {
-                if (login == "[tmi.twitch.tv]") return null;
-                _siraLog.Debug($"Fetching User [{login}]");
-                var response = await _twitchHelixApiService.FetchUserInfo(userIds: new[] { login });
-                if (response != null)
-                {
-                    var userData = response.Value.Data[0];
-                    _siraLog.Debug($"Successfully fetched user [{userData.DisplayName}].");
-                    usr = new TwitchActionUser(this, userData);
-                    if (!_userCache.ContainsKey(login))
-                    {
-                        _userCache.Add(login, usr);
-                    }
-                    return usr;
-                }
                 return null;
+            }
+
+            _siraLog.Debug($"Fetching User [{login}]");
+            var response = await _twitchHelixApiService.FetchUserInfo(loginNames: new[] { login });
+            if (response != null)
+            {
+                var userData = response.Value.Data[0];
+                _siraLog.Debug($"Successfully fetched user [{userData.DisplayName}].");
+                usr = new TwitchActionUser(this, userData);
+                if (!_userCache.ContainsKey(login))
+                {
+                    _userCache.Add(login, usr);
+                }
+                return usr;
             }
             return null;
         }
