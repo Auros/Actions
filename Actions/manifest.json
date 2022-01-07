@@ -7,7 +7,7 @@
   "description": "Create and use macros in Beat Saber.",
   "gameVersion": "1.19.0",
   "dependsOn": {
-    "BSIPA": "^4.2.0",
+    "BSIPA": "^4.2.1",
     "CatCore": "^0.0.1-alpha",
     "SiraUtil": "^3.0.3",
     "BeatSaberMarkupLanguage": "^1.6.1"
