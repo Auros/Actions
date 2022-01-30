@@ -1,6 +1,6 @@
 ﻿using System;
 using Zenject;
-using SiraUtil.Tools;
+using SiraUtil.Logging;
 using System.Collections.Generic;
 
 namespace Actions.Dashboard

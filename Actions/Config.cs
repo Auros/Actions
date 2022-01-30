@@ -16,7 +16,7 @@ namespace Actions
     {
         public event Action<Config>? Updated;
 
-        [NonNullable, UseConverter(typeof(HiveVersionConverter))]
+        [NonNullable, UseConverter(typeof(VersionConverter))]
         public virtual Hive.Versioning.Version Version { get; set; } = new Hive.Versioning.Version("0.0.0");
 
         public virtual bool Enabled { get; set; } = true;
@@ -32,10 +32,10 @@ namespace Actions
 
         public virtual string Channel { get; set; } = "";
 
-        [UseConverter(typeof(Vector3Converter))] public Vector3 MacroDashboardPosition { get; set; } = new Vector3(1.2f, 1.5f, -1.5f);
-        [UseConverter(typeof(Vector3Converter))] public Vector3 MacroDashboardRotation { get; set; } = new Vector3(0f, 180f, 0f);
-        [UseConverter(typeof(Vector3Converter))] public Vector3 UserManagerDashboardPosition { get; set; } = new Vector3(-1.2f, 1.5f, -1.5f);
-        [UseConverter(typeof(Vector3Converter))] public Vector3 UserManagerDashboardRotation { get; set; } = new Vector3(0f, 180f, 0f);
+        public Vector3 MacroDashboardPosition { get; set; } = new Vector3(1.2f, 1.5f, -1.5f);
+        public Vector3 MacroDashboardRotation { get; set; } = new Vector3(0f, 180f, 0f);
+        public Vector3 UserManagerDashboardPosition { get; set; } = new Vector3(-1.2f, 1.5f, -1.5f);
+        public Vector3 UserManagerDashboardRotation { get; set; } = new Vector3(0f, 180f, 0f);
 
         public virtual void Changed()
         {
