@@ -10,7 +10,7 @@ using IPALogger = IPA.Logging.Logger;
 
 namespace Actions
 {
-    [Plugin(RuntimeOptions.DynamicInit), Slog]
+    [Plugin(RuntimeOptions.DynamicInit), Slog, NoEnableDisable]
     public class Plugin
     {
         [Init]
@@ -19,19 +19,17 @@ namespace Actions
             Config config = conf.Generated<Config>();
             config.Version = metadata.HVersion;
 
-            zenjector
-                .On<PCAppInit>()
-                .Register<ActionsCoreInstaller>()
-                .Pseudo(Container =>
-                {
-                    Container.BindLoggerAsSiraLogger(log);
-                    Container.BindInstance(config).AsSingle();
-                    Container.BindInstance(metadata).WithId(nameof(Actions)).AsCached();
-                });
+            zenjector.UseLogger(log);
+            zenjector.Install<ActionsCoreInstaller>(Location.App);
+            zenjector.Install(Location.App, Container =>
+            {
+                Container.BindInstance(config).AsSingle();
+                Container.BindInstance(metadata).WithId(nameof(Actions)).AsCached();
+            });
 
-            zenjector.OnMenu<ActionsMenuInstaller>();
-            zenjector.OnMenu<ActionsDashboardInstaller>();
-            zenjector.OnGame<ActionsDashboardInstaller>().When(() => config.ShowInGame);
+            zenjector.Install<ActionsMenuInstaller>(Location.Menu);
+            zenjector.Install<ActionsDashboardMenuInstaller>(Location.Menu);
+            zenjector.Install<ActionsDashboardGameInstaller>(Location.Player);
         }
 
         [OnEnable, OnDisable]

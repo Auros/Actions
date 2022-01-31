@@ -1,5 +1,4 @@
 ﻿using Zenject;
-using SiraUtil;
 using Actions.UI;
 using Actions.Managers;
 
@@ -14,7 +13,7 @@ namespace Actions.Installers
             Container.Bind<ActionMainView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<ActionMacroView>().FromNewComponentAsViewController().AsSingle();
 
-            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject(nameof(ActionFlowCoordinator)).AsSingle();
+            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
         }
     }
 }

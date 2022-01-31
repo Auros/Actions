@@ -1,14 +1,21 @@
 ﻿using System;
 using Zenject;
-using SiraUtil;
 using Actions.UI.Dashboards;
 
 namespace Actions.Installers
 {
-    public class ActionsDashboardInstaller : Installer
+    public class ActionsDashboardGameInstaller : Installer
     {
+        private readonly Config _config;
+        ActionsDashboardGameInstaller(Config config)
+        {
+            _config = config;
+        }
+
         public override void InstallBindings()
         {
+            if (!_config.ShowInGame)
+                return;
             Container.Bind(typeof(IInitializable), typeof(IDisposable), typeof(MacroDash)).To<MacroDash>().FromNewComponentAsViewController().AsSingle();
             Container.Bind(typeof(IInitializable), typeof(IDisposable), typeof(UserManagerDash)).To<UserManagerDash>().FromNewComponentAsViewController().AsSingle();
         }

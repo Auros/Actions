@@ -94,7 +94,7 @@ namespace Actions.UI
         [UIAction("clicked-auros")]
         protected void ClickedAuros()
         {
-            Application.OpenURL("https://ko-fi.com/aurosnex");
+            Application.OpenURL("https://ko-fi.com/auros");
         }
     }
 }
