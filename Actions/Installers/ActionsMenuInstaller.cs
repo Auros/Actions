@@ -4,7 +4,7 @@ using Actions.Managers;
 
 namespace Actions.Installers
 {
-    public class ActionsMenuInstaller : Installer
+    internal class ActionsMenuInstaller : Installer
     {
         public override void InstallBindings()
         {

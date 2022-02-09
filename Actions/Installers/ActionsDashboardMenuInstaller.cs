@@ -1,25 +1,13 @@
-﻿using System;
-using Zenject;
+using System;
 using Actions.UI.Dashboards;
+using Zenject;
 
 namespace Actions.Installers
 {
-    internal class ActionsDashboardInstaller : Installer
+    internal class ActionsDashboardMenuInstaller : Installer
     {
-        private readonly Config? _config;
-
-        public ActionsDashboardInstaller(Config? config)
-        {
-            _config = config;
-        }
-
         public override void InstallBindings()
         {
-            if (_config == null || !_config.ShowInGame)
-            {
-                return;
-            }
-
             Container.Bind(typeof(IInitializable), typeof(IDisposable), typeof(MacroDash)).To<MacroDash>().FromNewComponentAsViewController().AsSingle();
             Container.Bind(typeof(IInitializable), typeof(IDisposable), typeof(UserManagerDash)).To<UserManagerDash>().FromNewComponentAsViewController().AsSingle();
         }

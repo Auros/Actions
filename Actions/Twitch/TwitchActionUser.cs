@@ -24,14 +24,7 @@ namespace Actions.Twitch
         {
             if (_socialPlatform is TwitchSocialPlatform twitchPlatform)
             {
-                if (length.HasValue)
-                {
-                    twitchPlatform.SendCommand($"timeout {Name} {length}");
-                }
-                else
-                {
-                    twitchPlatform.SendCommand($"ban {Name}");
-                }
+                twitchPlatform.SendCommand(length.HasValue ? $"timeout {Name} {length}" : $"ban {Name}");
             }
             return Task.CompletedTask;
         }

@@ -20,11 +20,11 @@ namespace Actions
 
             zenjector.UseLogger(log);
             zenjector.UseMetadataBinder<Plugin>();
-            
+
             zenjector.Install<ActionsCoreInstaller>(Location.App, config);
             zenjector.Install<ActionsMenuInstaller>(Location.Menu);
-            zenjector.Install<ActionsDashboardInstaller>(Location.Menu, null!);
-            zenjector.Install<ActionsDashboardInstaller>(Location.Tutorial | Location.Player, config);
+            zenjector.Install<ActionsDashboardMenuInstaller>(Location.Menu);
+            zenjector.Install<ActionsDashboardGameInstaller>(Location.Tutorial | Location.Player);
         }
     }
 }
