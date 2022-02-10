@@ -3,13 +3,13 @@
   "id": "Actions",
   "name": "Actions",
   "author": "Auros",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Create and use macros in Beat Saber.",
-  "gameVersion": "1.18.0",
+  "gameVersion": "1.19.0",
   "dependsOn": {
     "BSIPA": "^4.2.0",
     "ChatCore": "^2.0.0",
-    "SiraUtil": "^2.3.1",
-    "BeatSaberMarkupLanguage": "^1.4.1"
+    "SiraUtil": "^3.0.3",
+    "BeatSaberMarkupLanguage": "^1.6.1"
   }
 }

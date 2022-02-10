@@ -10,6 +10,7 @@ using Actions.Components;
 using System.ComponentModel;
 using BeatSaberMarkupLanguage;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 using BeatSaberMarkupLanguage.Parser;
 using BeatSaberMarkupLanguage.Attributes;
@@ -213,7 +214,7 @@ namespace Actions.UI.Dashboards
                 for (int i = 0; i < 10; i++)
                     userHosts.Add(new UserHost(UserClicked));
             }
-            await SiraUtil.Utilities.AwaitSleep(100);
+            await Task.Delay(100);
             base.DidActivate(firstActivation, addedToHierarchy, screenSystemEnabling);
             if (firstActivation)
             {

@@ -2,7 +2,7 @@
   <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize">
     <horizontal horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="85">
       <text text="~version" align="Left" font-size="5" face-color="grey" />
-      <clickable-text text="by Auros" align="Right" face-color="grey" hover-hint="Want to support me? Click this to open up my donation page in your browser." on-click="clicked-auros" />
+	  <clickable-text text="by Auros" align="Right" face-color="grey" hover-hint="Want to support me? Click this to open up my donation page in your browser." on-click="clicked-auros" />
     </horizontal>
     <vertical horizontal-fit="PreferredSize" vertical-fit="PreferredSize" pref-width="90">
       <image src="Actions.Resources.logo.png" pref-height="20" preserve-aspect="true" />
