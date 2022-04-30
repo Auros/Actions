@@ -51,6 +51,9 @@ namespace Actions.UI.Dashboards
         [UIComponent("nothing-text")]
         protected CurvedTextMeshPro nothingText = null!;
 
+        [UIComponent("select-user-text")]
+        protected CurvedTextMeshPro selectUserText = null!;
+
         private bool _normal;
         [UIValue("normal")]
         public bool Normal
@@ -59,7 +62,7 @@ namespace Actions.UI.Dashboards
             set
             {
                 _normal = value;
-                NotifyPropertyChanged();
+                NotifyPropertyChanged(); // I didn't think this line was needed but it is and I don't understand why
                 NotifyPropertyChanged(nameof(NotNormal));
             }
         }
@@ -67,12 +70,24 @@ namespace Actions.UI.Dashboards
         [UIValue("not-normal")]
         public bool NotNormal => !Normal;
 
+        [UIValue("select-user")]
+        private bool SelectUser
+        {
+            get // Might be a fancier way to do this
+            {
+                if (_specialMacro == null) return false;
+                else return true;
+            }
+            set => NotifyPropertyChanged(nameof(SelectUser));
+        }
+
         protected CanvasGroup userContainerCanvas = null!;
         protected DateTime _specialCommandExecutionTime;
         private IActionUser? _lastClickedUser;
         private string rootString = "";
         protected Macro? _specialMacro;
-        private bool opened = false;
+        public bool opened = false;
+        private int ShowSelectUserTextQueue = 0;
 
         public void Initialize()
         {
@@ -96,6 +111,38 @@ namespace Actions.UI.Dashboards
         {
             _specialMacro = macro;
             _specialCommandExecutionTime = DateTime.Now;
+            ShowSelectUserText();
+        }
+
+        private async void ShowSelectUserText()
+        {
+            ShowSelectUserTextQueue += 1; // If the user uses a special macro then uses another macro before the AwaitSleep finishes the text will hide itself early.
+            // This is an odd little fix but I didn't want to go into cancellation token shenanigans
+            selectUserText.alpha = 0;
+            SelectUser = true;
+            var alpha = selectUserText.alpha;
+            _tweeningManager.AddTween(new FloatTween(alpha, 1f, UpdateSelectUserTextAlpha, 0.5f, EaseType.InOutQuad), this);
+            await SiraUtil.Utilities.AwaitSleep(10000);
+            if (_specialMacro != null && ShowSelectUserTextQueue == 1)
+            {
+                HideSelectUserText();
+            }
+            ShowSelectUserTextQueue -= 1;
+        }
+
+        private void HideSelectUserText()
+        {
+            var alpha = selectUserText.alpha;
+            var tween = _tweeningManager.AddTween(new FloatTween(alpha, 0f, UpdateSelectUserTextAlpha, 0.5f, EaseType.InOutQuad), this);
+            tween.onCompleted += delegate ()
+            {
+                SelectUser = false;
+            };
+        }
+
+        private void UpdateSelectUserTextAlpha(float val)
+        {
+            selectUserText.alpha = val;
         }
 
         private void SceneChanged(Scene oldScene, Scene newScene)
@@ -181,7 +228,7 @@ namespace Actions.UI.Dashboards
         }
 
         [UIAction("toggle")]
-        protected void Clicked()
+        public void Clicked()
         {
             _tweeningManager.KillAllTweens(this);
             var currentAlpha = userContainerCanvas.alpha;
@@ -268,6 +315,7 @@ namespace Actions.UI.Dashboards
             _specialMacro = null;
 
             parserParams.EmitEvent("hide-modal");
+            HideSelectUserText();
         }
 
         [UIAction("timeout")]
