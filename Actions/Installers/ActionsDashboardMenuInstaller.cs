@@ -1,10 +1,10 @@
-﻿using System;
-using Zenject;
+using System;
 using Actions.UI.Dashboards;
+using Zenject;
 
 namespace Actions.Installers
 {
-    public class ActionsDashboardMenuInstaller : Installer
+    internal class ActionsDashboardMenuInstaller : Installer
     {
         public override void InstallBindings()
         {

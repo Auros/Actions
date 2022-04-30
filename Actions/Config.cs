@@ -1,13 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Actions.Dashboard;
 using IPA.Config.Stores;
-using SiraUtil.Converters;
-using Version = SemVer.Version;
-using System.Collections.Generic;
 using IPA.Config.Stores.Attributes;
 using IPA.Config.Stores.Converters;
-using System.Runtime.CompilerServices;
-using System;
+using SiraUtil.Converters;
+using UnityEngine;
 
 [assembly: InternalsVisibleTo(GeneratedStore.AssemblyVisibilityTarget)]
 namespace Actions
@@ -30,7 +29,7 @@ namespace Actions
 
         public virtual bool ShowInGame { get; set; } = false;
 
-        public virtual string Channel { get; set; } = "";
+        public virtual string? ChannelId { get; set; } = null;
 
         public Vector3 MacroDashboardPosition { get; set; } = new Vector3(1.2f, 1.5f, -1.5f);
         public Vector3 MacroDashboardRotation { get; set; } = new Vector3(0f, 180f, 0f);

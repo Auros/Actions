@@ -1,6 +1,5 @@
 ﻿using System;
 using Zenject;
-using SiraUtil.Logging;
 using System.Collections.Generic;
 
 namespace Actions.Dashboard
@@ -17,7 +16,7 @@ namespace Actions.Dashboard
             else _platforms = platforms;
         }*/
 
-        public PlatformManager(Config config, SiraLog siraLog, ISocialPlatform platform)
+        public PlatformManager(Config config, ISocialPlatform platform)
         {
             _config = config;
             _platforms = new List<ISocialPlatform> { platform };

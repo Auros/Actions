@@ -4,7 +4,7 @@ using Actions.Managers;
 
 namespace Actions.Installers
 {
-    public class ActionsMenuInstaller : Installer
+    internal class ActionsMenuInstaller : Installer
     {
         public override void InstallBindings()
         {
@@ -13,7 +13,7 @@ namespace Actions.Installers
             Container.Bind<ActionMainView>().FromNewComponentAsViewController().AsSingle();
             Container.Bind<ActionMacroView>().FromNewComponentAsViewController().AsSingle();
 
-            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject().AsSingle();
+            Container.Bind<ActionFlowCoordinator>().FromNewComponentOnNewGameObject().WithGameObjectName(nameof(ActionFlowCoordinator)).AsSingle();
         }
     }
 }
