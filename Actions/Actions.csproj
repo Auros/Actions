@@ -110,7 +110,6 @@
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig" />
         <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" Visible="false" />
         <None Include="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" Visible="false" />
         <None Include="Actions.csproj.user" Condition="Exists('Actions.csproj.user')" Visible="false" />
